@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>TrafficQProjectRecords</title>
+  <title>All Roads Lead to Kdb: Technical Counterpart</title>
   <style>
     code {
       font-family: monospace, monospace;
@@ -236,7 +236,7 @@
     <h1 id="all-roads-lead-to-kdb-the-technical-counterpart">All Roads Lead
       to Kdb: the technical counterpart</h1>
     <p>This post serves as a follow-up to our prior article, <a
-        href="https://github.com/hablapps/AllRoadsLeadToPyKX/blob/main/posts/AllRoadsLeadToPyKX.md">All
+        href="https://github.com/hablapps/AllRoadsLeadToKdb/blob/main/posts/AllRoadsLeadToKdb.md">All
         Roads Lead to PyKX</a>, where we introduced the utility of the PyKX
       library from the perspective of Emma Monad, the CTO of a large fictional
       company known as Mad Flow. In addition to this high-level perspective,
@@ -1235,7 +1235,7 @@
     <p>Let's get started!</p>
     <div class="alert">
       <b> 🔍 You can find on Github the <a
-          href="https://github.com/hablapps/AllRoadsLeadToPyKX/blob/main/src/pandas/Pandas_code.py">Original
+          href="https://github.com/hablapps/AllRoadsLeadToKdb/blob/main/src/pandas/Pandas_code.py">Original
           Python Project</a> that will be migrated into PyKX. </b>
     </div>
   </div>
@@ -1266,10 +1266,10 @@
   </div>
   <div id="f09daf6d" class="margin">
     <p>An excellent starting point for the migration process involves transferring our data to the q environment.
-      We can even revert these objects to Pandas and leverage all our existing code. This approach ensures that our
+      We can even revert these objects to Pandas and reuse all our existing code. This approach ensures that our
       data remains stored within the kdb environment, thus benefitting from its rapid and scalable database
       capabilities.
-      However, it's important to acknowledge that we might sacrifice the processing prowess of kdb+/q. As a result, we
+      However, it's important to acknowledge that we might sacrifice the processing power of kdb+/q. As a result, we
       will
       proceed with deeper steps in the migration process.</p>
     <p>Before continuing, be sure to download the <a href="#t21">datasets</a> required for running the next pieces of
@@ -1467,7 +1467,7 @@
   <div id="30e7b14f" class="margin">
     <p>To preprocess the traffic table our objective is to ascertain the
       average load based on date and season, while eliminating measurement
-      errors. The prowess of qSQL enables us to accomplish this feat through a
+      errors. The power of qSQL enables us to accomplish this feat through a
       singular query:</p>
   </div>
   <div id="d9c9c847" class="margin">
@@ -1775,7 +1775,7 @@
   </div>
   <div id="7d397c5c" class="margin">
     <p>As is evident, these objects are not currently within the q memory
-      space. Let's proceed to explore how we can access and leverage q
+      space. Let's proceed to explore how we can access and use q
       features on these objects. First, we will examine the straightforward
       <code>xcol</code> function, which affords us the ability to rename
       columns:
@@ -2476,7 +2476,7 @@ qSQL function:  H01;H02;H03;H04;H05;H06;H07;H08;H09;H10;H11;H12;H13;H14;H15;H16;
       between Python and q objects, empower us to temporarily reuse Python
       code. This is particularly pertinent given the scale of tables we are
       currently dealing with. To incorporate our q objects into this function,
-      we can leverage certain PyKX tools to convert them into Python
+      we can use certain PyKX tools to convert them into Python
       objects:</p>
   </div>
   <div id="05afc748" class="margin">
@@ -2814,9 +2814,9 @@ qSQL function:  H01;H02;H03;H04;H05;H06;H07;H08;H09;H10;H11;H12;H13;H14;H15;H16;
         <p>Once we've molded the data to align with our requirements, the
           subsequent step involves constructing the list of matrices. Achieving
           this entails employing a sliding window approach. In order to return a
-          list of matrices, rather than a list of tables, we leveraged the
+          list of matrices, rather than a list of tables, we used the
           <code>toMatrix</code> function, which facilitates the transformation of
-          a table into a matrix. Additionally, we harnessed the <code>sw</code>
+          a table into a matrix. Additionally, we useed the <code>sw</code>
           (sliding window) function to apply the sliding window concept to a
           singular large matrix.
         </p>
@@ -3044,8 +3044,8 @@ qSQL function:  H01;H02;H03;H04;H05;H06;H07;H08;H09;H10;H11;H12;H13;H14;H15;H16;
   <div id="b522a5be" class="margin">
     <div class="alert">
       <b> 🔍 You can find on Github the resulting <a
-          href="https://github.com/hablapps/AllRoadsLeadToPyKX/blob/main/src/pykx/PyKX_code.py">PyKX-enhanced
-          pythonic code</a>. </b> (TBD: fix url)
+          href="https://github.com/hablapps/AllRoadsLeadToKdb/blob/main/src/pykx/PyKX_code.py">PyKX-enhanced
+          pythonic code</a>. </b>
     </div>
   </div>
   <div id="91f0090c" class="margin">
@@ -3073,8 +3073,8 @@ qSQL function:  H01;H02;H03;H04;H05;H06;H07;H08;H09;H10;H11;H12;H13;H14;H15;H16;
         script</a> for readers seeking further insights.</p>
     <div class="alert">
       <b> 🔍 You can find on Github the resulting <a
-          href="https://github.com/hablapps/AllRoadsLeadToPyKX/tree/main/src/pykx.q">PyKX-enhanced
-          kdb+/q code</a>. (TBD: fix url)</b>
+          href="https://github.com/hablapps/AllRoadsLeadToKdb/tree/main/src/pykx.q">PyKX-enhanced
+          kdb+/q code</a>.</b>
     </div>
     <p>Our initial step involves executing the <code>haversine_vector</code>
       function for calculating coordinate distances. Given its unavailability
@@ -3278,7 +3278,6 @@ qSQL function:  H01;H02;H03;H04;H05;H06;H07;H08;H09;H10;H11;H12;H13;H14;H15;H16;
             class="uri">https://www.treliant.com/knowledge-center/pykx-boosts-trade-analytics/</a>
           June 26, 2023</em></li>
     </ul>
-    <p>(TBD: new refs - need formatting .. )</p>
   </div>
 </body>
 
