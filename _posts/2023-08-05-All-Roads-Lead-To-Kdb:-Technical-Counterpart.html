@@ -1,6 +1,6 @@
 ---
 layout: post
-date: 2023-08-31 10:00:00.000000000 +02:00
+date: 2023-09-15 10:00:00.000000000 +02:00
 type: post
 parent_id: '0'
 published: true
@@ -15,7 +15,7 @@ meta:
   geo_public: '0'
   _publicize_job_id: '9647437577'
 author: Oscar Nydza Nicpoñ, Marcos Vázquez Martín
-permalink: "/2023/08/31/all-roads-lead-to-kdb-the-technical-counterpart"
+permalink: "/2023/09/15/all-roads-lead-to-kdb-the-technical-counterpart"
 ---
 
 
@@ -268,7 +268,7 @@ permalink: "/2023/08/31/all-roads-lead-to-kdb-the-technical-counterpart"
       post <a href="https://kx.com/blog/accelerating-python-workflows-using-pykx/">Accelerating
         Python Workflows using PyKX</a>, which we highly recommend reading, we
       will observe a significant performance advantage of the resulting PyKX
-      code compared to the initial Pandas implementation. More references are
+      code compared to the initial pandas implementation. More references are
       available in the bibliography at the end of the post.</p>
     <p>The structure of the post will be as follows:</p>
     <ul>
@@ -291,7 +291,7 @@ permalink: "/2023/08/31/all-roads-lead-to-kdb-the-technical-counterpart"
     <p>The initial section regarding the use case is independent of
       programming languages and is primarily included for reference purposes.
       If you're eager to delve directly into the code and begin learning how
-      to migrate pure Pandas-based Python code into PyKX, you can proceed to
+      to migrate pure pandas-based Python code into PyKX, you can proceed to
       the <a href="#t3">second section</a> now and revisit the <a href="#t2">first section</a> as necessary.</p>
     <h2 id="use-case">Use Case<a class="anchor" id="t2"></a></h2>
     <p>With the aim of predicting traffic congestion in the presence of
@@ -823,7 +823,7 @@ permalink: "/2023/08/31/all-roads-lead-to-kdb-the-technical-counterpart"
     <p>This visualization is best shown using a heatmap, where the distances
       are displayed on a range from 0 to 20 kilometers:</p>
     <figure>
-      <img src="../../../../../assets/2023/08/05/heatmap3.png">
+      <img src="../../../../../assets/2023/09/15/heatmap3.png">
       <figcaption style="text-align: center"> <b>Figure 1:</b> Heatmap of distances in km between weather and traffic
         stations </figcaption>
     </figure>
@@ -1009,14 +1009,14 @@ permalink: "/2023/08/31/all-roads-lead-to-kdb-the-technical-counterpart"
       <tr>
         <td style='text-align:center;'>
           <figure>
-            <img src="../../../../../assets/2023/08/05/loadperhour.png">
+            <img src="../../../../../assets/2023/09/15/loadperhour.png">
             <figcaption style="text-align: center"> <b>Figure 2:</b> Load per Hour
             </figcaption>
           </figure>
         </td>
         <td>
           <figure>
-            <img src="../../../../../assets/2023/08/05/loadperweekday.png">
+            <img src="../../../../../assets/2023/09/15/loadperweekday.png">
             <figcaption style="text-align: center"> <b>Figure 3:</b> Load per
               Weekday </figcaption>
           </figure>
@@ -1084,7 +1084,7 @@ permalink: "/2023/08/31/all-roads-lead-to-kdb-the-technical-counterpart"
       matches the findings discussed in the <a href="#t2">Use Case</a>
       section.</p>
     <figure>
-      <img src="../../../../../assets/2023/08/05/rainfall.png">
+      <img src="../../../../../assets/2023/09/15/rainfall.png">
       <figcaption style="text-align: center"> <b>Figure 4:</b> The average traffic load per hour for measurements
         categorized as heavy rain (blue), moderate rain (brown), and no rain (green):</figcaption>
     </figure>
@@ -1140,13 +1140,13 @@ permalink: "/2023/08/31/all-roads-lead-to-kdb-the-technical-counterpart"
       <tr>
         <td style='text-align:center;'>
           <figure>
-            <img src="../../../../../assets/2023/08/05/loss_graph_p.png">
+            <img src="../../../../../assets/2023/09/15/loss_graph_p.png">
             <figcaption style="text-align: center"> <b>Figure 5:</b> Train vs Validation loss curves plot </figcaption>
           </figure>
         </td>
         <td>
           <figure>
-            <img src="../../../../../assets/2023/08/05/test_python.png">
+            <img src="../../../../../assets/2023/09/15/test_python.png">
             <figcaption style="text-align: center"> <b>Figure 6:</b> Traffic Forecasting for a traffic station
             </figcaption>
           </figure>
@@ -1169,7 +1169,7 @@ permalink: "/2023/08/31/all-roads-lead-to-kdb-the-technical-counterpart"
       <thead>
         <tr class="header">
           <th>         </th>
-          <th>Pandas Time    </th>
+          <th>pandas Time    </th>
         </tr>
       </thead>
       <tbody>
@@ -1195,15 +1195,15 @@ permalink: "/2023/08/31/all-roads-lead-to-kdb-the-technical-counterpart"
       alternatives at our disposal, along with their positive and negative aspects:</p>
     <ul>
       <li>
-        <p><strong>Partial migration</strong>: This approach involves identifying the specific points where Pandas
+        <p><strong>Partial migration</strong>: This approach involves identifying the specific points where pandas
           experiences
           the greatest strain. Subsequently, these segments can be migrated to q using PyKX, while leaving the rest of
           the code
           intact. This alternative capitalizes on the compatibility features of PyKX, which ensure a seamless
           interaction between
-          pure Pandas/Numpy and PyKX. For instance, we may use the <code>.pd()</code> method, which allows us to convert
+          pure pandas/NumPy and PyKX. For instance, we may use the <code>.pd()</code> method, which allows us to convert
           a PyPX table
-          object into a Pandas dataframe. This strategy can be particularly effective if the demarcation between
+          object into a pandas dataframe. This strategy can be particularly effective if the demarcation between
           computationally
           demanding and less complex segments is evident. However, this isn't always the case, leading to multiple
           conversions
@@ -1240,7 +1240,7 @@ permalink: "/2023/08/31/all-roads-lead-to-kdb-the-technical-counterpart"
         </table>
 
         <p>A promising alternative to this intermediate transformations method is the PyKX implementation of the
-          <a href="https://code.kx.com/pykx/1.6/user-guide/advanced/Pandas_API.html">Pandas API</a>. However,
+          <a href="https://code.kx.com/pykx/1.6/user-guide/advanced/Pandas_API.html">pandas API</a>. However,
           as we will explore later, even this had to be discarded for our particular case.
         </p>
       </li>
@@ -1286,7 +1286,7 @@ permalink: "/2023/08/31/all-roads-lead-to-kdb-the-technical-counterpart"
   </div>
   <div id="f09daf6d" class="margin">
     <p>An excellent starting point for the migration process involves transferring our data to the q environment.
-      We can even revert these objects to Pandas and reuse all our existing code. This approach ensures that our
+      We can even revert these objects to pandas and reuse all our existing code. This approach ensures that our
       data remains stored within the kdb environment, thus benefitting from its rapid and scalable database
       capabilities.
       However, it's important to acknowledge that we might sacrifice the processing power of kdb+/q. As a result, we
@@ -1301,7 +1301,7 @@ permalink: "/2023/08/31/all-roads-lead-to-kdb-the-technical-counterpart"
   <div id="7aefd96b" class="margin">
     <p>The preprocessing of the traffic table was one of the most critical
       parts in terms of time. Later on, we will showcase the improvement in
-      execution time compared to our pure Pandas implementation.</p>
+      execution time compared to our pure pandas implementation.</p>
     <p>The data loading will be executed employing the utilities facilitated
       by PyKX:</p>
   </div>
@@ -1406,8 +1406,8 @@ permalink: "/2023/08/31/all-roads-lead-to-kdb-the-technical-counterpart"
       <div style="background-color: #e5ffdf70;  padding: 40px; padding-top:30px; padding-bottom:20px">
         <p
           style="color: black; margin-top:0%; text-align: left;margin-left: 5%; margin-right: 5%; margin-bottom: 15px;line-weight: 1.5">
-          Accessing data within PyKX objects, be it lists or tables, follows a methodology analogous to that of Numpy or
-          Pandas. This facilitates the indexing of PyKX objects without necessitating the explicit utilization of q
+          Accessing data within PyKX objects, be it lists or tables, follows a methodology analogous to that of NumPy or
+          pandas. This facilitates the indexing of PyKX objects without necessitating the explicit utilization of q
           functions. Furthermore, the capacity to index by columns is an additional convenience offered by this
           approach.</p>
         <code
@@ -1516,13 +1516,13 @@ permalink: "/2023/08/31/all-roads-lead-to-kdb-the-technical-counterpart"
     <div class="alert alert-block"
       style="background-color: #FFFFFF; border: 0px solid; padding: 0px;box-shadow: 2px 2px #3841459c; border-left: 3px solid #953eff;margin-left: 5%; margin-right: 5%; border-top: 3px solid #953eff">
       <div class="alert-header custom-card-header" style="background-color: #fad5ff; color: black; padding: 10px;">
-        <i class="fa fa-commenting" aria-hidden="true" style="color:#953eff"></i>&nbsp;&nbsp;&nbsp;Pandas Alternative:
+        <i class="fa fa-commenting" aria-hidden="true" style="color:#953eff"></i>&nbsp;&nbsp;&nbsp;pandas alternative:
         Traffic Cleaning
       </div>
       <div style="background-color: #fbf1ff;  padding: 40px; padding-top:30px; padding-bottom:20px">
         <p
           style="color: black; margin-top:0%; text-align: left;margin-left: 5%; margin-right: 5%; margin-bottom: 15px;line-weight: 1.5">
-          Although it may look like a simple query, it is performing a seriously heavy operation. The original Pandas
+          Although it may look like a simple query, it is performing a seriously heavy operation. The original pandas
           implementation looked like this: </p>
         <code
           style="background-color: #eee;border: 1px solid #999;display: block;padding: 10px;margin-left: 8%;margin-right: 10%;margin-bottom: 0px; color:black"> >>> traffic = traffic[traffic["error"] == "N"].rename(columns={"carga":"load", "id":"traffic_station"})
@@ -1538,7 +1538,7 @@ permalink: "/2023/08/31/all-roads-lead-to-kdb-the-technical-counterpart"
         <table>
           <tr style="background-color: #FFFFFF;">
             <th style="background-color: #fbf1ff;"></th>
-            <th style="background-color:#fbf1ff">Pandas Time</th>
+            <th style="background-color:#fbf1ff">pandas Time</th>
             <th style="background-color:#fbf1ff">PyKX Time</th>
           </tr>
           <tr style="border-top: 1px solid #000000">
@@ -1577,13 +1577,13 @@ permalink: "/2023/08/31/all-roads-lead-to-kdb-the-technical-counterpart"
       <div class="alert-header custom-card-header"
         style="background-color: #d8ffd8; border: 1px solid #d8ffd8; color: black; padding: 10px;">
         <i class="fa fa-commenting" aria-hidden="true" style="color:#00b100"></i>&nbsp;&nbsp;&nbsp;Further Information
-        on Using <a href="https://code.kx.com/pykx/1.6/user-guide/advanced/numpy.html">Numpy</a> and <a
-          href="https://code.kx.com/pykx/1.6/user-guide/advanced/Pandas_API.html">Pandas</a>
+        on Using <a href="https://code.kx.com/pykx/1.6/user-guide/advanced/numpy.html">NumPy</a> and <a
+          href="https://code.kx.com/pykx/1.6/user-guide/advanced/Pandas_API.html">pandas</a>
       </div>
       <div style="background-color: #e5ffdf70;  padding: 40px; padding-top:30px; padding-bottom:20px">
         <p
           style="color: black; margin-top:0%; text-align: left;margin-left: 5%; margin-right: 5%; margin-bottom: 15px;line-weight: 1.5">
-          For individuals who are still acclimatizing to the kdb+/q ecosystem, a partial adoption of Numpy's
+          For individuals who are still acclimatizing to the kdb+/q ecosystem, a partial adoption of NumPy's
           functionality remains accessible. Specifically <a
             href="https://numpy.org/doc/stable/reference/ufuncs.html">universal functions</a>. By using this type of
           function, the average q function that was employed in the previous query can be rephrased as follows:</p>
@@ -1597,8 +1597,8 @@ permalink: "/2023/08/31/all-roads-lead-to-kdb-the-technical-counterpart"
 <div style="color:#808080;display:inline;">5.4 </div></code><br>
         <p
           style="color: black; margin-top:0%; text-align: left;margin-left: 5%; margin-right: 5%; margin-bottom: 15px;line-weight: 1.5">
-          While the ability to reuse numpy functions inside q is really nice and can be of great help during a migration
-          like the one we are exemplifying, we found that we were not able to use this numpy function on our
+          While the ability to reuse NumPy functions inside q is really nice and can be of great help during a migration
+          like the one we are exemplifying, we found that we were not able to use this NumPy function on our
           <code>kx.q.qsql()</code> query. After executing the previous code, our query would look something like this:
         </p>
         <code
@@ -1613,16 +1613,16 @@ permalink: "/2023/08/31/all-roads-lead-to-kdb-the-technical-counterpart"
           style="color: black; margin-top:0%; text-align: left;margin-left: 5%; margin-right: 5%; margin-bottom: 15px;line-weight: 1.5">
           Notice the function called to perform the average of the <code>traffic_load</code> column is the one defined
           earlier. Even though we didn't get any errors, this resulted in our code running for over 20 minutes with no
-          feedback until we eventually stopped it manually, so we can't recommend the usage Numpy functions inside a
+          feedback until we eventually stopped it manually, so we can't recommend the usage NumPy functions inside a
           qSQL query like we did. We suspect it may have something to do with q's <code>avg</code> function (and all of
-          q's functions) being optimised for this kind of usages and Numpy's implementation not being ready to deal with
+          q's functions) being optimised for this kind of usages and NumPy's implementation not being ready to deal with
           how kdb+/q implements its tables. It may also have something to do with the <code>group by</code> clause,
           which creates a keyed table on q, but we can't confirm it as of now.
         </p>
         <p
           style="color: black; margin-top:0%; text-align: left;margin-left: 5%; margin-right: 5%; margin-bottom: 15px; line-weight: 1.5">
-          On the other hand, Pandas can seamlessly interface with PyKX objects through the Pandas API. This can be
-          effortlessly achieved by importing Numpy and Pandas and toggling a designated flag. We can try to replicate
+          On the other hand, pandas can seamlessly interface with PyKX objects through the pandas API. This can be
+          effortlessly achieved by importing NumPy and pandas and toggling a designated flag. We can try to replicate
           the previous select:</p>
         <code
           style="background-color: #eee;border: 1px solid #999;display: block;padding: 10px;margin-left: 8%;margin-right: 10%;color:black"> >>> import os
@@ -1642,9 +1642,9 @@ permalink: "/2023/08/31/all-roads-lead-to-kdb-the-technical-counterpart"
         <br>
         <p
           style="color: black; margin-top:0%; text-align: left;margin-left: 5%; margin-right: 5%; margin-bottom: 15px; line-weight: 1.5">
-          However, it's worth noting that the Pandas API is currently under development, hence not all of Pandas
+          However, it's worth noting that the pandas API is currently under development, hence not all of pandas
           functions have been fully incorporated yet. And unfortunately, <code>groupby</code> is one of them. We hope
-          that in the future we can migrate our Pandas code to PyKX without any changes.</p>
+          that in the future we can migrate our pandas code to PyKX without any changes.</p>
       </div>
     </div>
   </div>
@@ -1664,7 +1664,7 @@ permalink: "/2023/08/31/all-roads-lead-to-kdb-the-technical-counterpart"
   </div>
   <div id="d539fa84" class="margin">
     <p>To display a table in markdown format, we can transfer it to
-      Pandas:</p>
+      pandas:</p>
   </div>
   <div id="030a8818" class="margin">
     <div class="sourceCode" id="cb11">
@@ -1786,8 +1786,8 @@ permalink: "/2023/08/31/all-roads-lead-to-kdb-the-technical-counterpart"
     <div style="background-color: #e5ffdf70;  padding: 40px; padding-top:30px; padding-bottom:20px">
       <p
         style="color: black; margin-top:0%; text-align: left;margin-left: 5%; margin-right: 5%; margin-bottom: 15px; line-weight: 1.5">
-        Objects from q can be converted to Pandas with <code>.pd()</code>, to PyArrow with <code>.pa()</code>, to
-        Numpy with <code>.np()</code> and to Python with <code>.py()</code> methods. This flexibility empowers Python
+        Objects from q can be converted to pandas with <code>.pd()</code>, to PyArrow with <code>.pa()</code>, to
+        NumPy with <code>.np()</code> and to Python with <code>.py()</code> methods. This flexibility empowers Python
         developers, especially those new to PyKX, to seamlessly tap into the capabilities of kdb+ databases while
         acquainting themselves with q.
       </p>
@@ -1952,13 +1952,13 @@ permalink: "/2023/08/31/all-roads-lead-to-kdb-the-technical-counterpart"
     <div class="alert alert-block alert-success"
       style="background-color: #FFFFFF; border: 0px solid; padding: 0px;box-shadow: 2px 2px #3841459c; border-left: 3px solid #953eff;margin-left: 5%; margin-right: 5%; border-top: 3px solid #953eff">
       <div class="alert-header custom-card-header" style="background-color: #fad5ff; color: black; padding: 10px;">
-        <i class="fa fa-commenting" aria-hidden="true" style="color:#953eff"></i>&nbsp;&nbsp;&nbsp;Pandas Alternative:
+        <i class="fa fa-commenting" aria-hidden="true" style="color:#953eff"></i>&nbsp;&nbsp;&nbsp;pandas Alternative:
         Time Join
       </div>
       <div style="background-color: #fbf1ff;  padding: 40px; padding-top:30px; padding-bottom:20px">
         <p
           style="color: black; margin-top:0%; text-align: left;margin-left: 5%; margin-right: 5%; margin-bottom: 15px;line-weight: 1.5">
-          In Pandas, we achieved this by executing this operation on our table: </p>
+          In pandas, we achieved this by executing this operation on our table: </p>
         <code
           style="background-color: #eee;border: 1px solid #999;display: block;padding: 10px;margin-left: 8%;margin-right: 10%;margin-bottom: 0px; color:black"> >>> pd.to_datetime(weather[["year", "month", "day"]])
 </code><br>
@@ -2356,13 +2356,13 @@ qSQL function:  H01;H02;H03;H04;H05;H06;H07;H08;H09;H10;H11;H12;H13;H14;H15;H16;
     <div class="alert alert-block alert-success"
       style="background-color: #FFFFFF; border: 0px solid; padding: 0px;box-shadow: 2px 2px #3841459c; border-left: 3px solid #953eff;margin-left: 5%; margin-right: 5%; border-top: 3px solid #953eff">
       <div class="alert-header custom-card-header" style="background-color: #fad5ff; color: black; padding: 10px;">
-        <i class="fa fa-commenting" aria-hidden="true" style="color:#953eff"></i>&nbsp;&nbsp;&nbsp;Pandas Alternative:
+        <i class="fa fa-commenting" aria-hidden="true" style="color:#953eff"></i>&nbsp;&nbsp;&nbsp;pandas Alternative:
         Weather Cleaning
       </div>
       <div style="background-color: #fbf1ff;  padding: 40px; padding-top:30px; padding-bottom:20px">
         <p
           style="color: black; margin-top:0%; text-align: left;margin-left: 5%; margin-right: 5%; margin-bottom: 15px;line-weight: 1.5">
-          This turned out to be a complex migration, since on Pandas this "flipping" functionality is provided by
+          This turned out to be a complex migration, since on pandas this "flipping" functionality is provided by
           <code>melt</code>:
         </p>
         <code
@@ -2374,7 +2374,7 @@ qSQL function:  H01;H02;H03;H04;H05;H06;H07;H08;H09;H10;H11;H12;H13;H14;H15;H16;
 </code><br>
         <p
           style="color: black; margin-top:0%; text-align: left;margin-left: 5%; margin-right: 5%; margin-bottom: 15px;line-weight: 1.5">
-          As for the subsequent operations, those turned more alike to the original Pandas implementation: </p>
+          As for the subsequent operations, those turned more alike to the original pandas implementation: </p>
         <code
           style="background-color: #eee;border: 1px solid #999;display: block;padding: 10px;margin-left: 8%;margin-right: 10%;margin-bottom: 0px; color:black"> >>> weather= weather_hour[weather_valid["value"] == "V"].reset_index()
  >>> 
@@ -2405,7 +2405,7 @@ qSQL function:  H01;H02;H03;H04;H05;H06;H07;H08;H09;H10;H11;H12;H13;H14;H15;H16;
         <table>
           <tr style="background-color: #FFFFFF;">
             <th style="background-color: #fbf1ff;"></th>
-            <th style="background-color:#fbf1ff">Pandas Time</th>
+            <th style="background-color:#fbf1ff">pandas Time</th>
             <th style="background-color:#fbf1ff">PyKX Time</th>
           </tr>
           <tr style="background-color:#fbf1ff; border-top: 1px solid #000000">
@@ -2710,13 +2710,13 @@ qSQL function:  H01;H02;H03;H04;H05;H06;H07;H08;H09;H10;H11;H12;H13;H14;H15;H16;
     <div class="alert alert-block alert-success"
       style="background-color: #FFFFFF; border: 0px solid; padding: 0px;box-shadow: 2px 2px #3841459c; border-left: 3px solid #953eff;margin-left: 5%; margin-right: 5%; border-top: 3px solid #953eff">
       <div class="alert-header custom-card-header" style="background-color: #fad5ff; color: black; padding: 10px;">
-        <i class="fa fa-commenting" aria-hidden="true" style="color:#953eff"></i>&nbsp;&nbsp;&nbsp;Pandas Alternative:
+        <i class="fa fa-commenting" aria-hidden="true" style="color:#953eff"></i>&nbsp;&nbsp;&nbsp;pandas Alternative:
         Final table
       </div>
       <div style="background-color: #fbf1ff;  padding: 40px; padding-top:30px; padding-bottom:20px">
         <p
           style="color: black; margin-top:0%; text-align: left;margin-left: 5%; margin-right: 5%; margin-bottom: 15px;line-weight: 1.5">
-          This is another bottleneck we encountered on our profiling. On Pandas, the code looked kind of similar, with a
+          This is another bottleneck we encountered on our profiling. On pandas, the code looked kind of similar, with a
           simple join and an asof join: </p>
         <code
           style="background-color: #eee;border: 1px solid #999;display: block;padding: 10px;margin-left: 8%;margin-right: 10%;margin-bottom: 0px; color:black"> >>> complete = traffic.merge(distance_table, on=["traffic_station"], how="inner")
@@ -2728,7 +2728,7 @@ qSQL function:  H01;H02;H03;H04;H05;H06;H07;H08;H09;H10;H11;H12;H13;H14;H15;H16;
         <table>
           <tr style="background-color: #FFFFFF;">
             <th style="background-color: #fbf1ff;"></th>
-            <th style="background-color:#fbf1ff">Pandas Time</th>
+            <th style="background-color:#fbf1ff">pandas Time</th>
             <th style="background-color:#fbf1ff">PyKX Time</th>
           </tr>
           <tr style="border-top: 1px solid #000000">
@@ -2768,7 +2768,7 @@ qSQL function:  H01;H02;H03;H04;H05;H06;H07;H08;H09;H10;H11;H12;H13;H14;H15;H16;
     </div>
   </div>
   <div id="7e591be5" class="margin">
-    <p>Throughout this transition from Pandas, the primary challenge emerged
+    <p>Throughout this transition from pandas, the primary challenge emerged
       while migrating the <code>time_window</code> function, given its
       reliance on loops. Our approach involved first comprehending the input
       data, defining the desired output, and then formulating an idiomatic q
@@ -2880,7 +2880,7 @@ qSQL function:  H01;H02;H03;H04;H05;H06;H07;H08;H09;H10;H11;H12;H13;H14;H15;H16;
     <div class="alert alert-block alert-success"
       style="background-color: #FFFFFF; border: 0px solid; padding: 0px;box-shadow: 2px 2px #3841459c; border-left: 3px solid #953eff;margin-left: 5%; margin-right: 5%; border-top: 3px solid #953eff">
       <div class="alert-header custom-card-header" style="background-color: #fad5ff; color: black; padding: 10px;">
-        <i class="fa fa-commenting" aria-hidden="true" style="color:#953eff"></i>&nbsp;&nbsp;&nbsp;Pandas Alternative:
+        <i class="fa fa-commenting" aria-hidden="true" style="color:#953eff"></i>&nbsp;&nbsp;&nbsp;pandas Alternative:
         Model Ingestion
       </div>
       <div style="background-color: #fbf1ff;  padding: 40px; padding-top:30px; padding-bottom:20px">
@@ -2922,7 +2922,7 @@ qSQL function:  H01;H02;H03;H04;H05;H06;H07;H08;H09;H10;H11;H12;H13;H14;H15;H16;
         <table>
           <tr style="background-color: #FFFFFF;">
             <th style="background-color: #fbf1ff;"></th>
-            <th style="background-color:#fbf1ff">Pandas Time</th>
+            <th style="background-color:#fbf1ff">pandas Time</th>
             <th style="background-color:#fbf1ff">PyKX Time</th>
           </tr>
           <tr style="border-top: 1px solid #000000">
@@ -2992,7 +2992,7 @@ qSQL function:  H01;H02;H03;H04;H05;H06;H07;H08;H09;H10;H11;H12;H13;H14;H15;H16;
     </div>
   </div>
   <div class="margin">
-    <img src="../../../../../assets/2023/08/05/132_0.png">
+    <img src="../../../../../assets/2023/09/15/132_0.png">
   </div>
   <div id="4f7246e0" class="margin">
     <p>And finally, we can see the performance of the model in the following
@@ -3010,7 +3010,7 @@ qSQL function:  H01;H02;H03;H04;H05;H06;H07;H08;H09;H10;H11;H12;H13;H14;H15;H16;
     </div>
   </div>
   <div class="margin">
-    <img src="../../../../../assets/2023/08/05/134_0.png">
+    <img src="../../../../../assets/2023/09/15/134_0.png">
   </div>
   <div id="d7dc5e20" class="margin">
     <h3 id="performance-gains-">Performance gains
@@ -3025,7 +3025,7 @@ qSQL function:  H01;H02;H03;H04;H05;H06;H07;H08;H09;H10;H11;H12;H13;H14;H15;H16;
       <thead>
         <tr class="header">
           <th>         </th>
-          <th>Pandas Time    </th>
+          <th>pandas Time    </th>
           <th>PyKX Time      </th>
         </tr>
       </thead>
@@ -3110,7 +3110,7 @@ qSQL function:  H01;H02;H03;H04;H05;H06;H07;H08;H09;H10;H11;H12;H13;H14;H15;H16;
       <div class="alert-header custom-card-header"
         style="background-color: #d8ffd8; border: 1px solid #d8ffd8; color: black; padding: 10px;">
         <i class="fa fa-commenting" aria-hidden="true" style="color:#00b100"></i>&nbsp;&nbsp;&nbsp;Further Information
-        on <a href="https://code.kx.com/pykx/1.6/user-guide/advanced/running_under_q.html">Python and Q Context</a>
+        on <a href="https://code.kx.com/pykx/1.6/user-guide/advanced/running_under_q.html">Python and Q Context</a>das
       </div>
       <div style="background-color: #e5ffdf70;  padding: 40px; padding-top:30px; padding-bottom:20px">
         <p
@@ -3129,8 +3129,8 @@ qSQL function:  H01;H02;H03;H04;H05;H06;H07;H08;H09;H10;H11;H12;H13;H14;H15;H16;
         </p>
       </div>
     </div>
-    <p>This function expects two Pandas DataFrames as input, so we need to
-      change the default conversion type from Numpy to Pandas:</p>
+    <p>This function expects two pandas DataFrames as input, so we need to
+      change the default conversion type from NumPy to pandas:</p>
     <div class="sourceCode" id="cb52">
       <pre
         class="sourceCode q"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>.pykx.setdefault<span class="st">&quot;pd&quot;</span>;</span></code></pre>
@@ -3178,7 +3178,7 @@ qSQL function:  H01;H02;H03;H04;H05;H06;H07;H08;H09;H10;H11;H12;H13;H14;H15;H16;
       <thead>
         <tr class="header">
           <th>         </th>
-          <th>Pandas Time    </th>
+          <th>pandas Time    </th>
           <th>PyKX Time      </th>
           <th>q Time</th>
         </tr>
@@ -3224,8 +3224,8 @@ qSQL function:  H01;H02;H03;H04;H05;H06;H07;H08;H09;H10;H11;H12;H13;H14;H15;H16;
       throughout this post, and learned a lot about the kdb+/q ecosystem and
       its technologies.</p>
     <p>It wasn't all smooth and sail though. For instance, we hit a
-      fundamental obstacle when using the Pandas API. In an ideal world, the
-      transition from Pandas to PyKX using this API would be as simple as
+      fundamental obstacle when using the pandas API. In an ideal world, the
+      transition from pandas to PyKX using this API would be as simple as
       importing PyKX, enabling a flag and getting the input tables as PyKX
       objects. However, since we relied on operations such as
       <code>group_by</code> and <code>melt</code>, it ended up being
@@ -3234,7 +3234,7 @@ qSQL function:  H01;H02;H03;H04;H05;H06;H07;H08;H09;H10;H11;H12;H13;H14;H15;H16;
       should note, however, that this feature is still on beta, so we look
       forward to future improvements in this regard since it would make
       migrations like this one much simpler once it becomes a drop-in
-      replacement for Pandas calls.
+      replacement for pandas calls.
     </p>
     <p>In summary, with the experience we gained we dare to recommend you
       following these steps as a PyKX migration guide:</p>
@@ -3254,8 +3254,8 @@ qSQL function:  H01;H02;H03;H04;H05;H06;H07;H08;H09;H10;H11;H12;H13;H14;H15;H16;
         when moving data between memory spaces is actually hindering the
         process, consider a full migration to PyKX.</li>
       <li>If a full migration to PyKX is needed, then first take a look at the
-        Pandas API. By the time you read this, it may have already improved
-        compatibility and could be a drop-in replacement for Pandas. If it's not
+        pandas API. By the time you read this, it may have already improved
+        compatibility and could be a drop-in replacement for pandas. If it's not
         the case you will need to familiarise yourself with PyKX and get your
         hands dirty as we had to.</li>
     </ol>
