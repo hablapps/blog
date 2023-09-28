@@ -1559,14 +1559,13 @@ permalink: "/2023/09/15/all-roads-lead-to-kdb-the-technical-counterpart"
     </div>
   </div>
   <div id="f42c0fe5" class="margin">
-    <p>Keyed table indexing is different; that's why if we want to see the
-      first values of the table, we need to use the <code>#</code>
-      (<em>take</em>) operator.</p>
+    <p>Now traffic is a keyed table. Keyed tables indexing is a bit different; that's why if we want to see the
+            first values of the table, we need to use the sublist method.</p>
   </div>
   <div id="8a2772b7" class="margin">
     <div class="sourceCode" id="cb9">
       <pre
-        class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(kx.q(<span class="st">&quot;3#&quot;</span>,traffic))</span></code></pre>
+        class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(kx.q.sublist(<span class="st">3</span>,traffic))</span></code></pre>
     </div>
   </div>
   <div class="margin">
@@ -1653,6 +1652,10 @@ permalink: "/2023/09/15/all-roads-lead-to-kdb-the-technical-counterpart"
       </div>
     </div>
   </div>
+  <div class="alert alert-block alert-info">
+    <b> 🔍 Version 2.0.0 of PyKX brings significant improvements in this regard, making the pandas API a viable option for such migrations. Regrettably, at the time when the post was created, these essential functions were not yet available. But now we have functions like groupby and flags/imports are no longer needed.
+    </b>
+</div>
   <div id="f991f02a" class="margin">
     <h4 id="weather">Weather</h4>
   </div>
@@ -1844,21 +1847,12 @@ permalink: "/2023/09/15/all-roads-lead-to-kdb-the-technical-counterpart"
           When Python objects have a direct equivalent in q, like dictionaries, they can be directly employed as
           attributes for PyKX functions. Beneath the surface, PyKX adeptly manages the conversion to q data structures.
         </p>
-        <p
-          style="color: black; margin-top:0%; text-align: left;margin-left: 5%; margin-right: 5%; margin-bottom: 15px; line-weight: 1.5">
-          Moreover, the application of <a href="https://code.kx.com/q/basics/iteration/">q iterations</a> could be
-          another avenue of exploration: </p>
-        <code
-          style="background-color: #eee;border: 1px solid #999;display: block;padding: 10px;margin-left: 8%;margin-right: 10%; color:black"> >>> kx.q("lower").each(['A', 'B', 'C'])
-<samp style="color:#808080;display:inline;"> `a`b`c </samp></code><br>
-        <p
-          style="color: black; margin-top:0%; text-align: left;margin-left: 5%; margin-right: 5%; margin-bottom: 15px; line-weight: 1.5">
-          Finally, you can even create functions and use them with PyKX or Python objects.</p>
-        <code
-          style="background-color: #eee;border: 1px solid #999;display: block;padding: 10px;margin-left: 8%;margin-right: 10%; color:black"> >>> kx.q("{u !(sum x=) each u:distinct x}", ['A', 'B', 'B', 'B' ,'C'])
+        <p style="color: black; margin-top:0%; text-align: left;margin-left: 5%; margin-right: 5%; margin-bottom: 15px;font-size: 115%; line-weight: 1.5"> Moreover, the application of <a href="https://code.kx.com/q/basics/iteration/">q iterations</a> could be another avenue of exploration. You can even create functions and use them with PyKX or Python objects using Lambda functions (as we have done thus far) or by applying a composition of functions to the Python object:</p>
+<code style="background-color: #eee;border: 1px solid #999;display: block;padding: 10px;margin-left: 8%;margin-right: 10%; color:black"> >>> kx.q.count.each(kx.q.group(['A', 'B', 'B', 'B' ,'C'])) 
 <samp style="color:#808080;display:inline;"> A| 1
  B| 3
- C| 1 </samp></code><br>
+ C| 1 </samp></code><br>  
+          
       </div>
     </div>
   </div>
@@ -2523,7 +2517,7 @@ qSQL function:  H01;H02;H03;H04;H05;H06;H07;H08;H09;H10;H11;H12;H13;H14;H15;H16;
   <div id="0c51ae77" class="margin">
     <div class="sourceCode" id="cb37">
       <pre
-        class="sourceCode python"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>ids <span class="op">=</span> kx.q.each(kx.q(<span class="st">&#39;{first where x=min x}&#39;</span>), dist)</span>
+        class="sourceCode python"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>ids <span class="op">=</span> kx.q.each(kx.q(<span class="st">&#39;{x?min x}&#39;</span>), dist)</span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>distance_table <span class="op">=</span> kx.q(<span class="st">&#39;{traffic_station ^ weather_station[x]}&#39;</span> ,  ids)</span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>distance_table <span class="op">=</span> kx.q.qsql.delete(distance_table, columns <span class="op">=</span> [<span class="st">&#39;tipo_elem&#39;</span>,<span class="st">&#39;distrito&#39;</span>,<span class="st">&#39;cod_cent&#39;</span>,<span class="st">&#39;nombre&#39;</span>,<span class="st">&#39;utm_x&#39;</span>,<span class="st">&#39;utm_y&#39;</span>,<span class="st">&#39;longitude&#39;</span>, <span class="st">&#39;latitude&#39;</span>])</span></code></pre>
     </div>
@@ -2592,7 +2586,7 @@ qSQL function:  H01;H02;H03;H04;H05;H06;H07;H08;H09;H10;H11;H12;H13;H14;H15;H16;
   <div id="92446f46" class="margin">
     <div class="sourceCode" id="cb40">
       <pre
-        class="sourceCode python"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>kx.q(<span class="st">&quot;5#&quot;</span>,complete).pd()</span></code></pre>
+        class="sourceCode python"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>kx.q.sublist(<span class="st">3</span>,complete).pd()</span></code></pre>
     </div>
   </div>
   <div class="margin">
@@ -3273,6 +3267,14 @@ qSQL function:  H01;H02;H03;H04;H05;H06;H07;H08;H09;H10;H11;H12;H13;H14;H15;H16;
       references to continue learning PyKX. Have fun with PyKX!</p>
   </div>
   <div id="4b5cbbd1" class="margin">
+
+<h2 id="Acknowledgments-"> Acknowledgments </h2>
+
+          We would like to express our gratitude to the KX team for their valuable advice and feedback. Special thanks
+          to Ferenc Bodon for suggesting several improvements.
+
+    <div id="4b5cbbd1" class="margin">
+
     <h2 id="bibliography-">Bibliography <a class="anchor" id="t5"></a></h2>
     <ul>
       <li><em>Vidas M, Tubić V, Ivanović I, Subotić M. Sustainability (Basel)
