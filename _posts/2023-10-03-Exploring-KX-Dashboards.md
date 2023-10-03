@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Exploring KX Dashboards"
-author: Oscar Nydza
+author: Oscar Nydza Nicpoñ
 image: /img/ceil-et-levres.jpg
 toc: true
 ---
@@ -17,7 +17,7 @@ In order to replicate the dashboard described on this post follow the [README fi
 
 ## Chapter 1: Getting the gist of it
 
-Thanks to the successful deployment of the kdb infrastructure discussed in our last post, Emma Monad, the CTO of Mad Flow, has decided to spend some time exploring the KX technology ecosystem more thoroughly. One of the tools that caught her attention the most was KX Dashboards. "This seems to be exactly what we need to replace those couple of processes written in Python that create some static graphics and automatically send them via email to our customers," she thought. Indeed, KX Dashboards would allow Emma to build dynamic reports based on the analytic data obtained from her processes and present them to her customers in a clean and interactive way, enabling them to gain more detailed insights into their data and information.
+Thanks to the successful deployment of the kdb infrastructure discussed in [our first post on PyKX](https://www.habla.dev/blog/2023/07/31/all-roads-lead-to-pykx.html), Emma Monad, the CTO of Mad Flow, has decided to spend some time exploring the KX technology ecosystem more thoroughly. One of the tools that caught her attention the most was KX Dashboards. "This seems to be exactly what we need to replace those couple of processes written in Python that create some static graphics and automatically send them via email to our customers," she thought. Indeed, KX Dashboards would allow Emma to build dynamic reports based on the analytic data obtained from her processes and present them to her customers in a clean and interactive way, enabling them to gain more detailed insights into their data and information.
 
 Emma has tasked our current protagonist, Félix Atomic, to build a dashboard to visualise Madrid's historic traffic using this new platform.  He has some background using other dashboard platforms, but he has mainly focused on developing software up until now, so this will mostly be a new experience to him. 
 
