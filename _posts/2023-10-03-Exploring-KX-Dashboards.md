@@ -152,3 +152,5 @@ Once those two key concepts were fully understood, the experience of using the p
 We also found [KX's blog posts on Dashboards](https://kx.com/search/?search_value=dashboards) to be incredibly useful, especially the ones describing the whole process of building a dashboard from scratch. In particular, [Visualizing Cycles Using KX Dashboards](https://kx.com/blog/visualizing-cycles-using-kx-dashboards/) allowed us to understand the playback component in depth and enabled us to take our dashboard to the next level.
 
 For future projects, we see a couple of routes that seem particularly interesting: custom components and real-time data. Specifically, we wish for the ability to "link" multiple components together, assigning them all a single shared View State and being able to add more layers to our traffic heatmap. These could most likely be achieved by creating custom components. Regarding real-time data and streaming data sources, we see a perfect match to visualize and gain insights into them using KX Dashboards facilities. Stay tuned for more updates and exciting developments ahead!
+
+*Post Picture: Ceil et Levres, Salvador Dalí*
