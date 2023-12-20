@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "Exploring KX Dashboards"
-authors: Cristian Pérez Corral, Christian Aberturas López
+title: "Power-up your data analytics: KX Insights"
+author: Cristian Pérez Corral, Christian Aberturas López
 image: /img/butterfly-ship.jpg
 toc: true
 ---
