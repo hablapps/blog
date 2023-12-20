@@ -13,9 +13,9 @@ KX Insights Enterprise is the fastest cloud-based platform for time series analy
 
 ## Overview
 
-The overview we can have of Insights is the following: a cloud-based data analysis platform. However, to reach the analysis, we need to go through some preliminary steps, such as creating the database or data ingestion.
+Let's get, before the analysis, through some preliminary steps, such as creating the database or data ingestion.
 
-For the development, we will use a specific use case—a telecommunications network. It has been chosen for two reasons: the data is temporal (thus allowing the use of time series analysis tools) and is of high density. With this, we will not only showcase the power of Insights but also the underlying machinery: the kdb+ database.
+For the development, we will use a specific use case—a telecommunications network. It has been chosen for two reasons: the data is temporal (thus allowing the use of time series analysis tools) and high density. With this, we will not only showcase the power of Insights but also the underlying machinery: the kdb+ database.
 
 
 Once we enter our instance of Insights Enterprise, we encounter the following screen.
@@ -53,7 +53,7 @@ After creating the schemas for the tables, we save and click on deploy, and with
 
 ##  Pipelines (I)
 
-When it comes to data ingestion, pipelines are employed. The tools provided by KX Insights Enterprise for the creation, analysis, and testing of pipelines are extensive and straightforward to use, as we will see below. They have four fundamental parts, which can then be further complicated or supplemented with others, namely:
+When it comes to data ingestion, pipelines are employed. The tools provided by KX Insights Enterprise for the creation, analysis, and testing of pipelines are extensive and straightforward to use, as we will see below. The more basic pipeline have four fundamental parts, which can then be further complicated or supplemented with others, namely:
 
 - Reader: The reader for Insights pipelines is highly versatile, allowing data ingestion from multiple sources, as depicted in Figure 1. (MAKE REFERENCE HERE SOMEHOW)
 - Decoder: The decoder, responsible for transforming data received through the reader into different formats (JSON, CSV, etc.) into a q structure.
@@ -65,11 +65,11 @@ Let's create a pipeline for the ingestion of telephone data, provided by a Kafka
 
 Before having a functional pipeline, a couple of things need to be done.
 
-To start, the data arriving through the Decoder is in dictionary format (the way JSON is cast), but the Apply Schema expects tables. Therefore, let's use the dropdown on the left, looking for the Map cell. Map applies the map() function to the incoming data, transforming all data in the stream. In this case, as the output of the Decoder is a dictionary, and a table is expected, the only function to apply to the data is the q enlist.
+The data arriving through the Decoder is in dictionary format (the way JSON is cast), but the Apply Schema expects tables. Therefore, let's use the dropdown on the left, looking for the Map cell. Map applies the map() function to the incoming data, transforming all data in the stream. In this case, as the output of the Decoder is a dictionary, and a table is expected, the only function to apply to the data is the q enlist.
 
 ![]({{ site.baseurl }}/assets/2023/12/19/basic_ppline_map.png)
 
-Furthermore, due to the high data density that can be received, it's better to introduce an intermediate step before writing, an Apply function. This function will progressively move the data to writing more "slowly," ensuring no issues with real-time database writing.
+> :warning: **due to the high data density that can be received, it's better to introduce an intermediate step before writing, an Apply function. This function will progressively move the data to writing more "slowly," ensuring no issues with real-time database writing.**
 
 ![]({{ site.baseurl }}/assets/2023/12/19/basic_ppline_apply.png)
 
@@ -86,12 +86,12 @@ Once here, we have three options for querying the data: using the API, employing
 
 ![]({{ site.baseurl }}/assets/2023/12/19/query1.png)
 
-We can observe that we are receiving the data without any issues! The schema of the current table is the one defined in the Databases section!
+We are receiving the data without any issues! Even the schema of the current table is the one defined in the Databases section!
 
 ## Pipelines (II)
 Okay, so far, we have ingested and queried our data, and everything is working quite well. Why don't we make it a little trickier? Let's complicate our pipeline.
 
-As a reminder, we have created two tables: `main` and `errs`. Now, we are going to save some data in the second one. We have been planning to gather information about the most errored users, intending to address their issues promptly, solve problems, and retain all clients. To achieve this, we will split our data stream into two different parts: the one mentioned earlier that fills the `main` table and the one we are going to discuss here. To store the errors, we are going to aggregate the data, intending to have the most accurate information about the errors.
+As a reminder, we have created two tables: `main` and `errs`. Now, we are going to save some data in the second one. Gathering information about the most errored users could be useful when intending to address their issues promptly, solve problems, and retain all clients. To achieve this, we will split our data stream into two different parts: the one mentioned earlier that fills the `main` table and the one we are going to discuss here. To store the errors, we are going to aggregate the data, intending to have the most accurate information about the errors.
 
 To do so we will add a few more blocks to our pipeline. A new one has appeared, and that is:
 
@@ -111,7 +111,7 @@ Now that we have set up our pipeline to load the `errs` table with data, it is t
 
 And _voilà_, we have our errored users stored!
 ## Views
-Last but no least, we have the Views section. This section allows us to create dashboards with the data we are ingesting through the pipeline, and analyze it in several ways! The interface is pretty similiar as the one our colleague Óscar explained in this (AÑADIR LINK POST OSCAR) post, so we are skipping the setup part. Instead, we are going to show some possibilities to analyze this data.
+Last but no least, we have the Views section. This section allows us to create dashboards with the data we are ingesting through the pipeline, and analyze it in several ways! The interface is pretty similiar as the one our colleague [Óscar](https://www.habla.dev/blog/2023/10/03/Exploring-KX-Dashboards.html) explained in this post, so we are skipping the setup part. Instead, we are going to show some possibilities to analyze this data.
 
 ### Heatmap
 First, we have created a heatmap that updates in real-time. This innovative heatmap dynamically illustrates user density across in this case Chicago. This live update feature ensures that the data displayed is always current, providing an accurate and up-to-the-minute view of network performance. This information enables us to optimize network coverage and capacity where it's most needed.
