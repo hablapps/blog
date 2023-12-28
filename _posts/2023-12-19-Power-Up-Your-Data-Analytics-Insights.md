@@ -7,22 +7,79 @@ toc: true
 ---
 
 
-# Power-up your data analytics: KX Insights
+# KX Insights: data analytics made simple
 
 KX Insights Enterprise is the fastest cloud-based platform for time series analysis, leveraging the power of kdb+ vector databases. But it's not just that; throughout this post, we will demonstrate how, without requiring advanced technical knowledge, you can develop data ingestion, query engine, and visualization—all thanks to this tool. Will you join us?
 
+## Use Case
+As a telecommunications (telco) company immersed in the dynamic world of high-density real-time telco data, we are on a mission to empower our Data Team with a robust system for in-depth data analysis and insightful conclusions. Our vision entails the creation of comprehensive dashboards that provide a visual representation of key metrics. To bring this vision to life, we have identified specific elements that will be pivotal in enhancing our operational understanding.
+
+### User Distribution Heatmap:
+Our objective is to gain insights into the geographical distribution of our users in real-time. The User Distribution Heatmap within KX Insights will vividly illustrate the concentration of our current users, allowing us to identify high-demand areas promptly.
+
+### Network Performance Analysis (Line Graph):
+Understanding the impact of network volume on speed is critical for ensuring a seamless user experience. Through KX Insights, we plan to deploy a Line Graph that dynamically illustrates how network volume influences speed, enabling us to optimize our network performance proactively.
+
+### User Location Tracker:
+The ability to locate users within a specific geography is essential for targeted interventions and optimizations. KX Insights will provide real-time information on the geographical whereabouts of our users, facilitating strategic decision-making.
+
+### Failure Analysis TreeMap:
+Identifying and resolving issues promptly is key to maintaining a high-quality service. A TreeMap, powered by KX Insights, will pinpoint users experiencing difficulties with their connection. This enables us to swiftly address issues and ensure a seamless communication experience for our users.
+
+Our choice of KX Insights is driven not only by the nature of our data, characterized by a vast volume of real-time information, but also by the platform's exceptional capabilities in constructing functional pipelines, executing complex queries, and delivering compelling visualizations. With KX Insights, we are equipped to harness the full potential of our telco data, providing our Data Team with the tools they need to navigate and derive actionable insights from this dynamic landscape.
 ## Overview
 
-Let's get, before the analysis, through some preliminary steps, such as creating the database or data ingestion.
+Before delving into the analysis, it's essential to navigate through some preliminary steps, including the creation of the database and data ingestion processes.
 
-For the development, we will use a specific use case—a telecommunications network. It has been chosen for two reasons: the data is temporal (thus allowing the use of time series analysis tools) and high density. With this, we will not only showcase the power of Insights but also the underlying machinery: the kdb+ database.
+For our development journey, we've opted to leverage the use case outlined earlier for two compelling reasons: the data's temporal nature, allowing for the utilization of time series analysis tools, and its high density. By doing so, we aim not only to demonstrate the prowess of KX Insights but also to shed light on the underlying machinery powering it—the kdb+ database.
 
+Assuming a Kafka server has already been deployed to store and manage the incoming data from the telco network, we'll subscribe to the corresponding topic to seamlessly capture the data.
 
-Once we enter our instance of Insights Enterprise, we encounter the following screen.
+This post will guide you through the intricacies of constructing a data pipeline in KX Insights, encompassing key stages such as defining the database schema, streaming data ingestion, and visualizing and querying data. Organizing our discussion around the aforementioned use case, we'll first develop a simplified pipeline to capture the foundational aspects of the data later visualized. Subsequently, we'll delve into refining our initial pipeline, exploring the extensive possibilities offered by this versatile tool. Let the journey begin!
+
+##  Was it always this easy?
+
+Now, let's consider the scenario where we need to construct a similar architecture using only kdb+/q. While we have a plethora of tools at our disposal, the question arises: How challenging would this endeavor be? Here, we succinctly outline some of the crucial steps that must be undertaken:
+
+1. **Build a Kafka Consumer:**
+   Constructing a Kafka consumer entails delving into the [API](https://github.com/KxSystems/kafka), understanding its intricacies, and developing the necessary infrastructure to facilitate seamless data consumption.
+
+2. **Orchestrate the Pipeline:**
+   Docking the pipeline involves implementing all the transformations essential for processing real-time data. This step requires careful consideration and meticulous execution.
+
+3. **Develop Graphic Tools:**
+   While the [_Grammar of Graphics_](https://code.kx.com/analyst/libraries/grammar-of-graphics/) package is a powerful tool, we would still need to create a system for visualizing the aggregated data. This involves developing graphic tools tailored to our specific requirements.
+
+Beyond these tasks, there's the challenge of working with an event handler for streaming data, which is not always straightforward. Additionally, packaging all these components into a black-box-like application is necessary to empower the entire data team to work with it, regardless of their technical expertise. Moreover, generalizing this solution for any conceivable use case poses an even more significant undertaking.
+
+Enter [KX Insights Enterprise](https://kx.com/products/kdb-insights-enterprise/). This solution wraps the complexity in a user-friendly web interface, eliminating the need for the data team to possess intricate technical knowledge. Now, anyone on the team can seamlessly work with the data, thanks to the intuitive interface provided by KX Insights Enterprise.
+
+To walk all the reader through this tool as easy as possible, we will follow the recommended steps of KX Insights, that can be seen in the following image:
 
 ![]({{ site.baseurl }}/assets/2023/12/19/overview.png)
 
-The parts that will compose this post are those visible on the screen, addressing each one individually for development.
+When it comes to data ingestion, pipelines are employed. The tools provided by KX Insights Enterprise for the creation, analysis, and testing of pipelines are extensive and straightforward to use, as we will see below. The more basic pipeline have four fundamental parts, which can then be further complicated or supplemented with others, namely:
+
+- Reader: The reader for Insights pipelines is highly versatile, allowing data ingestion from multiple sources, as depicted in Figure 1. (MAKE REFERENCE HERE SOMEHOW)
+- Decoder: The decoder, responsible for transforming data received through the reader into different formats (JSON, CSV, etc.) into a q structure.
+- Apply Schema: Shapes the incoming data through ingestion. It can be any type of data, tabular, or an array.
+- Writer: This last component, as its name suggests, is responsible for writing the received data into a table in a previously created database.
+Let's create a pipeline for the ingestion of telephone data, provided by a Kafka service. To achieve this, having chosen Kafka as the data source (selecting the corresponding broker and topic), JSON as the decoder, the schema of the `main` table seen earlier, and writing to that table, we end up with the following:
+
+![]({{ site.baseurl }}/assets/2023/12/19/basic_ppline.png)
+
+Before having a functional pipeline, a couple of things need to be done.
+
+The data arriving through the Decoder is in dictionary format (the way JSON is cast), but the Apply Schema expects tables. Therefore, let's use the dropdown on the left, looking for the Map cell. Map applies the map() function to the incoming data, transforming all data in the stream. In this case, as the output of the Decoder is a dictionary, and a table is expected, the only function to apply to the data is the q enlist.
+
+![]({{ site.baseurl }}/assets/2023/12/19/basic_ppline_map.png)
+
+> :warning: **due to the high data density that can be received, it's better to introduce an intermediate step before writing, an Apply function. This function will progressively move the data to writing more "slowly," ensuring no issues with real-time database writing.**
+
+![]({{ site.baseurl }}/assets/2023/12/19/basic_ppline_apply.png)
+
+The magic of Insights lies precisely in the fact that, with a minimal amount of code, we have managed to deploy a real-time massive data ingestion pipeline. You don't always need to be technical to work with data!
+
 ## Databases
 
 
@@ -51,29 +108,7 @@ And the `errs` table has 3 (we have already seen `ts` and `imsi`):
 
 After creating the schemas for the tables, we save and click on deploy, and with that, we have the database up and running!
 
-##  Pipelines (I)
 
-When it comes to data ingestion, pipelines are employed. The tools provided by KX Insights Enterprise for the creation, analysis, and testing of pipelines are extensive and straightforward to use, as we will see below. The more basic pipeline have four fundamental parts, which can then be further complicated or supplemented with others, namely:
-
-- Reader: The reader for Insights pipelines is highly versatile, allowing data ingestion from multiple sources, as depicted in Figure 1. (MAKE REFERENCE HERE SOMEHOW)
-- Decoder: The decoder, responsible for transforming data received through the reader into different formats (JSON, CSV, etc.) into a q structure.
-- Apply Schema: Shapes the incoming data through ingestion. It can be any type of data, tabular, or an array.
-- Writer: This last component, as its name suggests, is responsible for writing the received data into a table in a previously created database.
-Let's create a pipeline for the ingestion of telephone data, provided by a Kafka service. To achieve this, having chosen Kafka as the data source (selecting the corresponding broker and topic), JSON as the decoder, the schema of the `main` table seen earlier, and writing to that table, we end up with the following:
-
-![]({{ site.baseurl }}/assets/2023/12/19/basic_ppline.png)
-
-Before having a functional pipeline, a couple of things need to be done.
-
-The data arriving through the Decoder is in dictionary format (the way JSON is cast), but the Apply Schema expects tables. Therefore, let's use the dropdown on the left, looking for the Map cell. Map applies the map() function to the incoming data, transforming all data in the stream. In this case, as the output of the Decoder is a dictionary, and a table is expected, the only function to apply to the data is the q enlist.
-
-![]({{ site.baseurl }}/assets/2023/12/19/basic_ppline_map.png)
-
-> :warning: **due to the high data density that can be received, it's better to introduce an intermediate step before writing, an Apply function. This function will progressively move the data to writing more "slowly," ensuring no issues with real-time database writing.**
-
-![]({{ site.baseurl }}/assets/2023/12/19/basic_ppline_apply.png)
-
-The magic of Insights lies precisely in the fact that, with a minimal amount of code, we have managed to deploy a real-time massive data ingestion pipeline. You don't always need to be technical to work with data!
 
 
 ## Query (I)
