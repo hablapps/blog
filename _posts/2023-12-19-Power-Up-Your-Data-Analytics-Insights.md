@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Power-up your data analytics: KX Insights"
+title: "KX Insights: data analytics made simple"
 author: Cristian Pérez Corral, Christian Aberturas López
 image: /img/butterfly-ship.jpg
 toc: true
@@ -82,13 +82,13 @@ Our database (which we will name db-telco) will have two tables: `main` and `err
 -   `lng`: The longitude of the device from which the event is taking place (float type).
 -   `cellDistance`: The distance to the cell of the device (float type).
 
-![Schema Main](assets/2023/12/19/schema_main.png)
+![]({{ site.baseurl }}/assets/2023/12/19/schema_main.png)
 
 And the `errs` table has 3 (we have already seen `ts` and `imsi`):
 
 -   `count0`: This counts the errors that have occurred in the network in the grouping (int type).
 
-![Schema Errs](assets/2023/12/19/schema_errs.png)
+![]({{ site.baseurl }}/assets/2023/12/19/schema_errs.png)
 
 After creating the schemas for the tables, we save and click on deploy, and with that, we have the database up and running!
 
@@ -103,7 +103,7 @@ When it comes to data ingestion, pipelines are employed. The tools provided by K
 
 Let's create a pipeline for the ingestion of telephone data, provided by a Kafka service. To achieve this, having chosen Kafka as the data source (selecting the corresponding broker and topic), JSON as the decoder, the schema of the `main` table seen earlier, and writing to that table, we end up with the following:
 
-![Basic Pipeline](assets/2023/12/19/basic_ppline.png)
+![]({{ site.baseurl }}/assets/2023/12/19/basic_ppline.png)
 
 Before having a functional pipeline, a couple of things need to be done.
 
@@ -111,13 +111,13 @@ As we are getting JSON-format data, we will have to decode it. The data arriving
 
 > **This step must be done because the captured data is in JSON format. If we would have CSV-like streaming data, we wouldn't need to transform it to tables: as the usual interpretation of CSV is table-like.**
 
-![Pipeline Map Step](assets/2023/12/19/basic_ppline_map.png)
+![]({{ site.baseurl }}/assets/2023/12/19/basic_ppline_map.png)
 
 We are capturing a lot of data in real time. To make the data loading easier, we will add an additional step to load it in batches.
 
 > **Due to the high data density that can be received, it's better to introduce an intermediate step before writing, an Apply function. This function will progressively move the data to writing more "slowly," ensuring no issues with real-time database writing. This is a recommended practice whose purpose is to stop components from getting overloaded, which could lead to the processes getting OOM killed.**
 
-![Pipeline Apply Step](assets/2023/12/19/basic_ppline_apply.png)
+![]({{ site.baseurl }}/assets/2023/12/19/basic_ppline_apply.png)
 
 The magic of Insights lies precisely in the fact that, with a minimal amount of code, we have managed to deploy a real-time massive data ingestion pipeline. You don't always need to be technical to work with data!
 
@@ -175,31 +175,31 @@ Last but not least, we have the Views section. This section allows us to create 
 ### Stream Connectors
 As in the dashboards post, when you declare a view in KX Insights, you have to create a data source that will ingest data from a database. As said before, Insights have three different default databases: RDB, IDB, and HDB. As we are analyzing real-time data, most of the time we will ingest from RDB, as seen below (image from heatmap datasource).
 
-![Views Sources](assets/2023/12/19/views_sources.png)
+![]({{ site.baseurl }}/assets/2023/12/19/views_sources.png)
 
 Also, as in the query engine, you can just use the Insights API to query the data from any of those databases, as you can see in the following image:
 
-![Views API](assets/2023/12/19/views_api.png)
+![]({{ site.baseurl }}/assets/2023/12/19/views_api.png)
 
 ### Heatmap
 First, we have created a heatmap that updates in real-time. This innovative heatmap dynamically illustrates user density across in this case Chicago. This live update feature ensures that the data displayed is always current, providing an accurate and up-to-the-minute view of network performance. This information enables us to optimize network coverage and capacity where it's most needed.
 
-![Heatmap](assets/2023/12/19/heatmap_gr.png)
+![]({{ site.baseurl }}/assets/2023/12/19/heatmap_gr.png)
 
 ### Speed
 We have also created a dashboard where we plot both the upload and download speeds of different connections in real-time. This gives us information about how our network is working in general terms. In essence, this speed tracking dashboard is a key component in our toolkit, enabling us to continuously monitor and improve the overall health and performance of our network.
 
-![Volumes](assets/2023/12/19/volumes.png)
+![]({{ site.baseurl }}/assets/2023/12/19/volumes.png)
 
 ### Tracker
 We have created a dashboard that acts as a tracker, as we can follow the locations of the different connections that the user makes. It maps out the geographical journey of users by pinpointing where and when they establish network connections. This level of detailed tracking is invaluable for understanding user mobility and network usage patterns.
 
-![Tracker Zoomed](assets/2023/12/19/tracker_zoomed.png)
+![]({{ site.baseurl }}/assets/2023/12/19/tracker_zoomed.png)
 
 ### Errored Users
 We have created a treemap where we represent the users who have experienced the most errors in the last few minutes. By categorizing and visualizing the errors encountered by our users, this treemap enables us to quickly identify and address the most common and pressing issues. The real-time nature of the dashboard ensures that we are always aware of the current state of user experience, allowing for swift and proactive interventions.
 
-![Errors](assets/2023/12/19/errors.png)
+![]({{ site.baseurl }}/assets/2023/12/19/errors.png)
 
 
 ## Conclusions
