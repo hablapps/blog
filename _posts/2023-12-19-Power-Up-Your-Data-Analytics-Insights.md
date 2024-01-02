@@ -65,7 +65,7 @@ To walk all the reader through this tool as easy as possible, we will follow the
 
 ![]({{ site.baseurl }}/assets/2023/12/19/overview.png)
 
- ### Deploying the database
+### Deploying the database
  
 Once we have accessed the databases tab, we can configure it to suit our specific needs. We will leave the technical specifications (memory, storage, etc.) at their default settings, thus avoiding the technical details.
 
