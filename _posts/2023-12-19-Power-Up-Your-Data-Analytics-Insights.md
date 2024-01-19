@@ -20,7 +20,7 @@ As we progress through these sections, you will gain a comprehensive understandi
 
 # Use Case
 
-Let's consider a scenario where we are a telecommunications (telco) company deeply involved in the dynamic world of high-density real-time telco data. In this situation, our goal is to empower our Data Team with a robust system for in-depth data analysis and insightful conclusions. The provided data have several fields that will be explained deeply in a [later](#deploying-the-database) section, but to ilustrate the use case we can preview some available registers. 
+Let's consider a scenario where we are a telecommunications (telco) company deeply involved in the dynamic world of high-density real-time telco data. In this situation, our goal is to empower our Data Team with a robust system for in-depth data analysis and insightful conclusions. The provided data have several fields that will be explained deeply in a [later](#deploying-the-database) section, but to ilustrate the use case we can preview some available records. 
 
 | ts           | cellID | phase | imsi  | imei  | dspeed | uspeed | lat      | lng      | cellDistance | 
 |--------------|--------|-------|-------|-------|--------|--------|----------|----------|--------------|
@@ -32,7 +32,7 @@ To analyse this data, we will create comprehensive dashboards that visually repr
 
 * **User Distribution Heatmap**: Our objective is to gain insights into the geographical distribution of our users in real-time. The User Distribution Heatmap within KX Insights will vividly illustrate the concentration of our current users, allowing us to promptly identify high-demand areas.
 
-* **Network Performance Analysis (Line Graph)**: Understanding the impact of network density on speed is critical for ensuring a seamless user experience. Through KX Insights, we plan to deploy a Line Graph that dynamically illustrates how network upload and download speed, enabling proactive optimization of our network performance.
+* **Network Performance Analysis (Line Graph)**: Understanding the impact of network density on speed is critical for ensuring a seamless user experience. Through KX Insights, we plan to deploy a Line Graph that dynamically illustrates network upload and download speed variability, enabling proactive optimization of our network performance.
 
 * **User Location Tracker**: The ability to locate users within a specific geography is essential for targeted interventions and optimizations. KX Insights will provide real-time information on the geographical whereabouts of our users, facilitating strategic decision-making.
 
@@ -60,9 +60,9 @@ The solution presented in this post using [KX Insights Enterprise](https://kx.co
 
 ### Deploying the database
 
-Once we have accessed the **Databases** tab, we can configure it to suit our specific needs. For simplicity, we will leave the technical specifications (memory, storage, etc.) at their default settings, thus avoiding delving into unnecessary technical details.
+Once we have accessed the **Build a Database** tab, we can configure it to suit our specific needs. For simplicity, we will leave the technical specifications (memory, storage, etc.) at their default settings, thus avoiding delving into unnecessary technical details.
 
-Our database (which we will name `db-telco`) will include the `main` table. This table is where real-time telephony data will be stored (and from where the heatmap, tracker, and volume views will capture the data). It will have 10 columns, which are:
+Our database (which we will name `db-telco`) will include the `main` table. This table is where real-time telephony data will be stored (and from where the heatmap, tracker, and volume views will capture the data). It will have 10 columns, as seen in the records example, which are:
 
 - `ts`: The timestamp of the network trace for the record (timestamp type).
 - `cellID`: The ID of the cell on which the trace is being transmitted (symbol type).
@@ -85,7 +85,7 @@ After creating the schemas for the table, we save and click on **Deploy**, and w
 When it comes to data ingestion, pipelines are employed. The tools provided by KX Insights Enterprise for the creation, analysis, and testing of pipelines are extensive and straightforward to use, as we will see below. Constructing the pipelines using the web interface (i.e., going to _Import Data_ in the Overview window) is pretty straightforward and gives us a basic pipeline that will have four fundamental parts, which can then be further complicated or supplemented with others, namely:
 
 - **Reader:** The reader for Insights pipelines is highly versatile, allowing data ingestion from multiple sources, as depicted in the image below.
-- **Decoder:** The decoder, responsible for transforming data received through the reader into different formats (JSON, CSV, etc.) into a q structure.
+- **Decoder:** The decoder, responsible for transforming data received through the reader into different formats (JSON, CSV, etc.) into a q datatype.
 - **Apply Schema:** Shapes the incoming data through ingestion. It can be any type of data, tabular, or an array.
 - **Writer:** This last component, as its name suggests, is responsible for writing the received data into a table in a previously created database.
 
