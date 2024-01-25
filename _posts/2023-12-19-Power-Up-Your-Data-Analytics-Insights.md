@@ -104,7 +104,7 @@ Firstly, as we are getting JSON-format data, we will have to decode it. The data
 
 ![]({{ site.baseurl }}/assets/2023/12/19/basic_ppline_map.png)
 
-Additionally, considering the potentially high data density, it is advisable to incorporate an intermediate step before writing to the database – an Apply function. This function facilitates a gradual transfer of data to the writing process at a more measured pace, storing it in batches. By minimizing the frequency of database writer calls, we mitigate the risk of efficiency reduction. This practice is recommended to prevent component overload, which could otherwise result in processes being terminated due to out-of-memory (OOM) issues.
+Additionally, considering the potentially high data density, it is advisable to incorporate an intermediate step before writing to the database – an Apply function. This function facilitates a gradual transfer of data to the writing process at a more measured pace, storing it in batches. By minimizing the frequency of database writer calls, we mitigate the risk of efficiency reduction. This practice is recommended to prevent component overload, which could otherwise result in processes being terminated due to out-of-memory (OOM) issues. It's worth noting that this technique is commonly employed in other platforms for real-time data ingestion, underscoring its effectiveness and reliability.
 
 ![]({{ site.baseurl }}/assets/2023/12/19/basic_ppline_apply.png)
 
@@ -183,14 +183,14 @@ Up until now, our data ingestion has revolved around high-density, real-time dat
 
 We have ingested and queried our data, and everything is working quite well. Why don't we make it a little trickier? In this section, we will briefly comment on a little upgrade to the pipeline built in the previous one, following the same structure (i.e., database → pipeline → query → dashboard). Shall we begin?
 
-Let's create the `errs` table. This new table will be used for a subsequent grouping to study errors in the network (and assist the most errored users). It will have three fields (we have already seen `ts` and `imsi`):
+Let's create the `errs` table. This new table will be used for a subsequent grouping to study errors in the network (and assist users with the highest error rates). It will have three fields (we have already seen `ts` and `imsi`):
 
 - `count0`: This counts the errors that have occurred in the network in the grouping (int type).
 
 
 ![]({{ site.baseurl }}/assets/2023/12/19/schema_errs.png)
 
-Presently, our focus shifts towards storing data in this context. The collection of information concerning the most errored users holds significant utility for promptly addressing their concerns, resolving issues, and maintaining client satisfaction. This entails bifurcating our data stream into two distinct segments: the previously highlighted stream that populates the `main` table, and the one under consideration here. To facilitate error storage, we intend to aggregate the data, aiming for the utmost precision in error-related information.
+Presently, our focus shifts towards storing data in this context. The collection of information concerning users with the highest error rates holds significant utility for promptly addressing their concerns, resolving issues, and maintaining client satisfaction. This entails bifurcating our data stream into two distinct segments: the previously highlighted stream that populates the `main` table, and the one under consideration here. To facilitate error storage, we intend to aggregate the data, aiming for the utmost precision in error-related information.
 
 To aggregate the data, we will use a new module:
 
@@ -214,7 +214,7 @@ Having established our pipeline for loading the `errs` table with data, the subs
 
 ![]({{ site.baseurl }}/assets/2023/12/19/query_errs.png)
 
-And _voilà_, we have our errored users stored!
+And _voilà_, we have our high error rate users stored!
 
 To visualize the errors, we have created a treemap where we represent the users who have experienced the most errors in the last few minutes. By categorizing and visualizing the errors encountered by our users, this treemap enables us to quickly identify and address the most common and pressing issues. This dashboard does not use the RDB but the IDB in order to aggregate through more time, so we are always aware of the last-minute state of user experience, allowing for swift and proactive interventions.
 
