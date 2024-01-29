@@ -8,9 +8,9 @@ toc: true
 
 # KX Insights: Simplifying Data Analytics
 
-This post serves as a concise exploration of the versatile capabilities within [**KX Insights**](https://kx.com/products/kdb-insights/), highlighting its role as the premier cloud-based platform for efficient time series analysis. Leveraging the robust capabilities of kdb+ vector databases, this tool stands out not only for its exceptional speed but also for empowering users— even those without advanced technical expertise— to seamlessly develop data ingestion processes, query engines, and visualizations. The post will be structured as follows:
+This post serves as a concise exploration of the versatile capabilities within [**KX Insights**](https://kx.com/products/kdb-insights/), highlighting its role as the premier cloud-based platform for efficient time series analysis. Leveraging the robust capabilities of kdb+ vector databases, this tool stands out not only for its exceptional speed but also for empowering users— particularly those without advanced technical expertise— to seamlessly develop data ingestion processes, query engines, and visualizations. The post will be structured as follows:
 
-- [Use Case](#use-case): Delving into a specific use case, we will employ an illustrative example using telecommunication network data. The simulated data tailored for this use case ensures that readers can easily follow the content at their own pace.
+- [Use Case](#use-case): Delving into a specific use case, we will employ an illustrative example using telecommunication network data. This section aims to explain the kind of data we start with and the functionality we want to derive from it.
 
 - [*Was it always this easy?*](#was-it-always-this-easy): In this first technical section, we will guide you through establishing a straightforward data pipeline. It explores the steps involved in gathering key stream data and demonstrates how to leverage KX Insights' capabilities for insightful analysis. The overall aim is to highlight the simplicity of working with the tool.
 
@@ -18,17 +18,18 @@ This post serves as a concise exploration of the versatile capabilities within [
 
 As we progress through these sections, you will gain a comprehensive understanding of how KX Insights transforms intricate time series analysis tasks into manageable and insightful processes, making it an invaluable asset for both seasoned professionals and those new to the field.
 
+> ℹ️ *To facilitate your engagement with the post, please refer to the following [Github repository](https://github.com/hablapps/insights-demohttps://github.com/hablapps/insights-demo). There you will find sample data, code snippets, schemas, and other utilities that will allow you to reproduce the results from this report.*
+
 # Use Case
 
-Let's consider a scenario where we are a telecommunications (telco) company deeply involved in the dynamic world of high-density real-time telco data. In this situation, our goal is to empower our Data Team with a robust system for in-depth data analysis and insightful conclusions. The provided data have several fields that will be explained deeply in a [later](#deploying-the-database) section, but to ilustrate the use case we can preview some available records. 
+Let's consider a scenario where we are a telecommunications (telco) company deeply involved in the dynamic world of high-density real-time telco data. In this situation, our goal is to empower our Data Team with a robust system for in-depth data analysis and insightful conclusions. The provided data have several fields that will be explained deeply in a [later](#deploying-the-database) section, but to ilustrate the use case we can preview some available records:
 
-| ts           | cellID | phase | imsi  | imei  | dspeed | uspeed | lat      | lng      | cellDistance | 
-|--------------|--------|-------|-------|-------|--------|--------|----------|----------|--------------|
-| 2023-12-29D09:04:41.721100000  | 8c314ca8-7d12-44d0-933d-015d0e3d951a    | 1|  100000000000001 | 507552665363501 | 280.2945    | 57.12098     | 38.51778   | -89.06238  |  2.124557  |
-| 2023-12-29D09:25:41.721200000  | 51587a43-60ef-42ea-88c9-b3128413870a    | 1|  100000000000002 | 868646385084695 | 317.5947    | 62.77128     | 38.84545   | -89.6521  |  2.570359  |
+| ts                            | cellID                               | phase | imsi            | imei            | dspeed   | uspeed   | lat      | lng       | cellDistance |
+| ----------------------------- | ------------------------------------ | ----- | --------------- | --------------- | -------- | -------- | -------- | --------- | ------------ |
+| 2023-12-29D09:04:41.721100000 | 8c314ca8-7d12-44d0-933d-015d0e3d951a | 1     | 100000000000001 | 507552665363501 | 280.2945 | 57.12098 | 38.51778 | -89.06238 | 2.124557     |
+| 2023-12-29D09:25:41.721200000 | 51587a43-60ef-42ea-88c9-b3128413870a | 1     | 100000000000002 | 868646385084695 | 317.5947 | 62.77128 | 38.84545 | -89.6521  | 2.570359     |
 
-
-To analyse this data, we will create comprehensive dashboards that visually represent key metrics. We have identified specific elements that will be pivotal in enhancing our operational understanding.
+Basically, these records show information about calls from users located at a certain longitude and latitude, through a specific cell of the telecommunication network. To analyse this data, we will create comprehensive dashboards that visually represent key metrics. We have identified specific elements that will be pivotal in enhancing our operational understanding:
 
 * **User Distribution Heatmap**: Our objective is to gain insights into the geographical distribution of our users in real-time. The User Distribution Heatmap within KX Insights will vividly illustrate the concentration of our current users, allowing us to promptly identify high-demand areas.
 
@@ -38,8 +39,9 @@ To analyse this data, we will create comprehensive dashboards that visually repr
 
 * **Failure Analysis TreeMap**: Identifying and resolving issues promptly is key to maintaining a high-quality service. A TreeMap, powered by KX Insights, will pinpoint users experiencing difficulties with their connection, enabling us to swiftly address issues and ensure a seamless communication experience for our users.
 
-> ℹ️ *For our development journey, we've chosen to leverage the use case outlined earlier for two compelling reasons: the data's temporal nature, allowing for the utilization of time series analysis tools, and its high density. By doing so, we aim not only to demonstrate the prowess of KX Insights but also to shed light on the underlying machinery powering it—the kdb+ database. Please note that the data presented is specifically crafted for this illustrative example and does not originate from real telecommunication sources. You will be provided with this simulated data to facilitate your engagement with the post.*
+For our development journey, we've chosen to leverage the use case outlined earlier for two compelling reasons: the data's temporal nature, allowing for the utilization of time series analysis tools, and its high density. By doing so, we aim not only to demonstrate the prowess of KX Insights but also to shed light on the underlying machinery powering it—the kdb+ database. 
 
+> ℹ️ *Please note that the data presented is specifically crafted for this illustrative example and does not originate from real telecommunication sources.*
 
 # Was it Always This Easy?
 
@@ -55,7 +57,6 @@ Beyond these tasks, there's the challenge of working with an event handler for s
 
 The solution presented in this post using [KX Insights Enterprise](https://kx.com/products/kdb-insights-enterprise/) wraps all this complexity in a user-friendly web interface, eliminating the need for the data team to possess intricate technical knowledge. To walk the reader through this tool as easily as possible, we will follow the recommended steps of KX Insights, which can be seen in the following image:
 
-
 ![]({{ site.baseurl }}/assets/2023/12/19/overview.png)
 
 ### Deploying the database
@@ -69,8 +70,8 @@ Our database (which we will name `db-telco`) will include the `main` table. This
 - `phase`: This field could be omitted.
 - `imsi`: The ID of the SIM card participating in the trace (string type).
 - `imei`: The ID of the device participating in the trace (string type).
-- `dspeed`: The download speed of the network at this moment, cell, and event (float type).
-- `uspeed`: The upload speed of the network at this moment, cell, and event (float type).
+- `dspeed`: The download speed of the network for this particular event (float type).
+- `uspeed`: The upload speed of the network for this particular event (float type).
 - `lat`: The latitude of the device from which the event is taking place (float type).
 - `lng`: The longitude of the device from which the event is taking place (float type).
 - `cellDistance`: The distance to the cell of the device (float type).
@@ -79,18 +80,16 @@ Our database (which we will name `db-telco`) will include the `main` table. This
 
 After creating the schemas for the table, we save and click on **Deploy**, and with that, we have the database up and running!
 
-
 ### Data slide: the pipeline
 
 When it comes to data ingestion, pipelines are employed. The tools provided by KX Insights Enterprise for the creation, analysis, and testing of pipelines are extensive and straightforward to use, as we will see below. Constructing the pipelines using the web interface (i.e., going to _Import Data_ in the Overview window) is pretty straightforward and gives us a basic pipeline that will have four fundamental parts, which can then be further complicated or supplemented with others, namely:
 
 - **Reader:** The reader for Insights pipelines is highly versatile, allowing data ingestion from multiple sources, as depicted in the image below.
-- **Decoder:** The decoder, responsible for transforming data received through the reader into different formats (JSON, CSV, etc.) into a q datatype.
+- **Decoder:** The decoder, responsible for transforming data received through the reader from different formats (JSON, CSV, etc.) into a q datatype.
 - **Apply Schema:** Shapes the incoming data through ingestion. It can be any type of data, tabular, or an array.
 - **Writer:** This last component, as its name suggests, is responsible for writing the received data into a table in a previously created database.
 
 Let's create a pipeline for the ingestion of telephone data, provided by a Kafka service. To achieve this, having chosen Kafka as the data source (selecting the corresponding broker and topic), JSON as the decoder, the schema of the `main` table seen earlier, and writing to that table, we end up with the following:
-
 
 ![]({{ site.baseurl }}/assets/2023/12/19/basic_ppline.png)
 
@@ -98,9 +97,9 @@ We will be writing in a database stored in the KX Insights architecture, but thi
 
 Before having a functional pipeline, a couple of things need to be done.
 
-Firstly, as we are getting JSON-format data, we will have to decode it. The data arriving through the Decoder is in dictionary format (as is the main approach for JSON data), but the Apply Schema expects tables. We need to transform the data. Therefore, let's use the dropdown on the left, looking for the Map cell. Map applies the `map()` function to the incoming data, transforming all data in the stream. In this case, as the output of the Decoder is a dictionary, and a table is expected, the only function to apply to the data is the q `enlist`.
+Firstly, as we are getting JSON-format data, we will have to decode it. The data arriving through the Decoder is in dictionary format (as is the main approach for JSON data), but the Apply Schema expects tables. We need to transform the data, which can be easily done through an additional intermediate step. Particularly, let's use the dropdown on the left, looking for the Map cell. Map applies the `map()` function to the incoming data, transforming all data in the stream. In this case, as the output of the Decoder is a dictionary, and a table is expected, the only function to apply to the data is the q `enlist`.
 
-> ⚠️ *This step must be done because the captured data is in JSON format. If we would have CSV-like streaming data, we wouldn't need to transform it to tables: as the usual interpretation of CSV is table-like.*
+> ℹ️ *This step must be included because the captured data is in JSON format. If we would have CSV-like streaming data, we wouldn't need to transform it to tables, as the usual interpretation of CSV is table-like.*
 
 ![]({{ site.baseurl }}/assets/2023/12/19/basic_ppline_map.png)
 
@@ -128,22 +127,19 @@ To examine the data, let's navigate to the "Query" section, where we will encoun
 
 Once here, we have three options for querying the data: using the API, employing SQL, or utilizing q. By using q, we can perform various transformations with simple commands, so let's proceed with it. As we observed in the pipeline, we are storing the data in the `main` table and querying from its stream tier _rdb_.
 
-
 ![]({{ site.baseurl }}/assets/2023/12/19/query1.png)
 
 We can even do a little analysis of the speed of the network data using the "Visual" window below, as follows:
-
 
 ![]({{ site.baseurl }}/assets/2023/12/19/query2.png)
 
 And also, using PyKX, we can check the different statistics of the table as easily as working with Pandas!
 
-
 ![]({{ site.baseurl }}/assets/2023/12/19/query3.png)
 
 ### Enjoying the views
 
-Now that we have stored the data, what about analyzing it? This section allows us to create dashboards with the data we are ingesting through the pipeline and analyze it in several ways! The interface is pretty similar to the one our colleague [Óscar](https://www.habla.dev/blog/2023/10/03/Exploring-KX-Dashboards.html) explained in [this post](https://www.habla.dev/blog/2023/10/03/Exploring-KX-Dashboards.html), so we are skipping most of the setup part. Nevertheless, there are two things that may have to be explained:
+Now that we have stored the data, what about analyzing it? This section allows us to create dashboards with the data we are ingesting through the pipeline and analyze it in several ways! The interface is pretty similar to the one our colleague Óscar explained in [this post](https://www.habla.dev/blog/2023/10/03/Exploring-KX-Dashboards.html), so we are skipping most of the setup part. Nevertheless, there are two things that may have to be explained:
 
 ##### Stream Connectors
 
@@ -159,13 +155,11 @@ Also, as in the query engine, you can just use the Insights API to query the dat
 
 First, we have created a heatmap that updates in real-time. This innovative heatmap dynamically illustrates user density across, in this case, Chicago. This live update feature ensures that the data displayed is always current, providing an accurate and up-to-the-minute view of network performance. This information enables us to optimize network coverage and capacity where it's most needed.
 
-
 ![]({{ site.baseurl }}/assets/2023/12/19/heatmap_gr.png)
 
 ##### Speed
 
 We have also created a dashboard where we plot both the upload and download speeds of different connections in real-time. This gives us information about how our network is working in general terms. In essence, this speed tracking dashboard is a key component in our toolkit, enabling us to continuously monitor and improve the overall health and performance of our network.
-
 
 ![]({{ site.baseurl }}/assets/2023/12/19/volumes.png)
 
@@ -173,11 +167,9 @@ We have also created a dashboard where we plot both the upload and download spee
 
 We have created a dashboard that acts as a tracker, allowing us to follow the locations of the different connections that the user makes. It maps out the geographical journey of users by pinpointing where and when they establish network connections. This level of detailed tracking is invaluable for understanding user mobility and network usage patterns.
 
-
 ![]({{ site.baseurl }}/assets/2023/12/19/tracker_zoomed.png)
 
 Up until now, our data ingestion has revolved around high-density, real-time data utilizing the fundamental modules offered by KX Insights Enterprise. Moreover, we've successfully illuminated the insights derived from this data through the integration of Dashboards. Consequently, the inquiry arises: how can we further enhance this process?
-
 
 ## The hardest; the easiest
 
@@ -186,7 +178,6 @@ We have ingested and queried our data, and everything is working quite well. Why
 Let's create the `errs` table. This new table will be used for a subsequent grouping to study errors in the network (and assist users with the highest error rates). It will have three fields (we have already seen `ts` and `imsi`):
 
 - `count0`: This counts the errors that have occurred in the network in the grouping (int type).
-
 
 ![]({{ site.baseurl }}/assets/2023/12/19/schema_errs.png)
 
@@ -197,7 +188,6 @@ To aggregate the data, we will use a new module:
 - _Timer Window_: This one will store the streaming data by a specified time (in this case, 1 minute).
 
 Once our _Timer Window_ has stored the last minute of data, we will aggregate it using a _Map_. The map function will aggregate by `imsi`, counting the times that the speed of some user is lower than a given threshold.
-
 
 `0!select count0: count i by imsi, ts from data where uspeed < avg[uspeed] | dspeed < avg[dspeed] `
 
@@ -211,7 +201,6 @@ As we can see, repeated modules have the same name, with a numeric identificatio
 
 Having established our pipeline for loading the `errs` table with data, the subsequent step involves verification to ensure its functionality. To accomplish this, it is necessary to return to the query engine and modify our code statement accordingly, querying from the newly created table to assess its operational status.
 
-
 ![]({{ site.baseurl }}/assets/2023/12/19/query_errs.png)
 
 And _voilà_, we have our high error rate users stored!
@@ -224,27 +213,23 @@ To visualize the errors, we have created a treemap where we represent the users 
 
 Throughout our exploration, it has become abundantly clear that KX Insights Enterprise stands out as an exceedingly convenient and proficient tool for crafting bespoke data analysis services. Its capabilities extend far beyond mere simplification – it substantially streamlines the complexities inherent in pipeline construction, data querying, and visualization. Remarkably, this tool empowers us to undertake such endeavors without the extensive technical expertise traditionally associated with similar projects. Consequently, we now find ourselves in possession of a thoroughly comprehensive and fully operational real-time data service.
 
-
-## Acknowledgements
-
-Acknowledgments to Alfonso Campo for the creation of the simulated data and to Stephen Meany for the unwavering technical support provided.
-
-
-## References
-
-Should you wish to gain a more profound understanding of this tool, we strongly recommend following the latest KX Academy demonstrations pertaining to the tool. While certain aspects covered in this post may coincide with these demonstrations, leveraging all accessible resources will enhance your ability to construct more extensive data-oriented systems.
+Should you wish to gain a more profound understanding of this tool, we strongly recommend following the latest KX Academy demonstrations pertaining to KX Insights. While certain aspects covered in this post may coincide with these demonstrations, leveraging all accessible resources will enhance your ability to construct more extensive data-oriented systems.
 
 - *Build and backtest scalable trading strategies using real-time and historical tick data*: [KX Academy - Finance](https://code.kx.com/insights/1.8/enterprise/recipes/finance.html).
 - *Manufacturing Tutorial: Apply deep neural networks to streaming IoT data using MQTT and Tensorflow*: [KX Academy - Manufacturing](https://code.kx.com/insights/1.8/enterprise/recipes/manufacturing.html).
 - *Integrate Kafka and kdb+ for real-time telemetry*: [KX Academy - Kafka Integration](https://code.kx.com/insights/1.8/enterprise/recipes/kafkaread.html).
 - *Drag and Drop Application Design with kdb Insights Enterprise, Eoin Killeen*: [KX Community Meetup - Belfast](https://kx.com/videos/drag-and-drop-application-design-with-kdb-insights-enterprise-at-community-meetup-belfast/)
 
-Should you desire to delve further into the technical aspects, you have the option to construct your own data ingestion process utilizing KX Insights, bypassing reliance on the web interface. The guidance provided in this post will assist you in navigating this undertaking.
+Should you desire to delve further into the technical aspects, you have the option to construct your own data ingestion process utilizing KX Insights, bypassing reliance on the web interface. The guidance provided in this post will assist you in navigating this undertaking:
 
 - *Getting Started with kdb Insights*: [Treliant - Getting Started](https://www.treliant.com/knowledge-center/getting-started-with-kdb-insights/).
 
-For a comprehensive collection of schemas, code snippets, and additional resources referenced in this post, please visit our GitHub repository.
+Finally, for a comprehensive collection of schemas, code snippets, and additional resources referenced in this post, please visit our GitHub repository.
 
 - GitHub Repository: [Habla Computing](https://github.com/hablapps/insights-demo)
 
-Explore the full set of materials to delve dhttps://github.eeper into the technical details and implementations discussed in this content.
+Explore the full set of materials to delve deeper into the technical details and implementations discussed in this content. Please let us know if you encounter any difficulties, and have fun with KX Insights!
+
+## Acknowledgements
+
+We extend our most heartfelt thanks to Alfonso Campo for creating the simulated data, and to Stephen Meany for his unwavering technical support.
