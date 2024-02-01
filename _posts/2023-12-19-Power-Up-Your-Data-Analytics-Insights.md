@@ -18,7 +18,7 @@ This post serves as a concise exploration of the versatile capabilities within [
 
 As we progress through these sections, you will gain a comprehensive understanding of how KX Insights transforms intricate time series analysis tasks into manageable and insightful processes, making it an invaluable asset for both seasoned professionals and those new to the field.
 
-> ℹ️ *To facilitate your engagement with the post, please refer to the following [Github repository](https://github.com/hablapps/insights-demohttps://github.com/hablapps/insights-demo). There you will find sample data, code snippets, schemas, and other utilities that will allow you to reproduce the results from this report.*
+> ℹ️ *To facilitate your engagement with the post, please refer to the following [Github repository](https://github.com/hablapps/insights-demo). There you will find sample data, code snippets, schemas, and other utilities that will allow you to reproduce the results from this report.*
 
 # Use Case
 
