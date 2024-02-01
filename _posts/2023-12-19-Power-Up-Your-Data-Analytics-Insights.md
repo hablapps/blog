@@ -66,7 +66,7 @@ Our database (which we will name `db-telco`) will include the `main` table. This
 
 - `ts`: The timestamp of the network trace for the record (timestamp type).
 - `cellID`: The ID of the cell on which the trace is being transmitted (symbol type).
-- `phase`: This field could be omitted.
+- `phase`: Indicates the data source's release stage (int type).
 - `imsi`: The ID of the SIM card participating in the trace (string type).
 - `imei`: The ID of the device participating in the trace (string type).
 - `dspeed`: The download speed of the network at this moment, cell, and event (float type).
