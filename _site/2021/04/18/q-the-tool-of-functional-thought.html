@@ -1,0 +1,172 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Q: The Tool of Functional Thought - Habla computing Blog</title>
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="shortcut icon" type="image/png" href="/favicon.png" />
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Q: The Tool of Functional Thought | Habla computing Blog</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Q: The Tool of Functional Thought" />
+<meta name="author" content="Jesús López-González" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="About this series" />
+<meta property="og:description" content="About this series" />
+<link rel="canonical" href="http://localhost:4000/2021/04/18/q-the-tool-of-functional-thought.html" />
+<meta property="og:url" content="http://localhost:4000/2021/04/18/q-the-tool-of-functional-thought.html" />
+<meta property="og:site_name" content="Habla computing Blog" />
+<meta property="og:image" content="http://localhost:4000/img/momento-de-transicion.jpg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-04-18T00:00:00+02:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="http://localhost:4000/img/momento-de-transicion.jpg" />
+<meta property="twitter:title" content="Q: The Tool of Functional Thought" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","image":"http://localhost:4000/img/momento-de-transicion.jpg","headline":"Q: The Tool of Functional Thought","dateModified":"2021-04-18T00:00:00+02:00","datePublished":"2021-04-18T00:00:00+02:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2021/04/18/q-the-tool-of-functional-thought.html"},"author":{"@type":"Person","name":"Jesús López-González"},"description":"About this series","url":"http://localhost:4000/2021/04/18/q-the-tool-of-functional-thought.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-140060849-1"></script>
+<script>
+  window['ga-disable-UA-140060849-1'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-140060849-1');
+</script></head>
+
+<body>
+<div class="navbar is-white">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+                Habla computing Blog
+            </a>
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div class="navbar-menu" id="navMenu">
+            <div class="navbar-end">
+                
+                <a class="navbar-item" href="/authors/">Authors</a>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+    <section class="hero  is-medium  is-bold is-dark"  style="background: url('/img/momento-de-transicion.jpg') no-repeat center center; background-size: cover;" >
+    <div class="hero-body">
+        <div class="container">
+            <p class="title is-2">Q: The Tool of Functional Thought</p>
+            <p class="subtitle is-3"></p>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        
+<div class="intro">
+    <div class="columns is-centered">
+        
+        <div class="column is-4-desktop is-6-tablet">
+            <p class="title is-1">Preface</p>
+        </div>
+    </div>
+</div>
+
+
+<div class="columns is-centered">
+    <div class="column is-8-desktop is-10-tablet">
+        <div class="content">
+            <p><strong>Published: Apr 18, 2021 by Jesús López-González</strong></p>
+            <h1 id="about-this-series">About this series</h1>
+
+<p>This series of posts describes our experience while learning
+<a href="https://code.kx.com/q/learn/startingkdb/language/"><em>q</em></a> and <em>kdb+</em> by Kx
+Systems. According to <a href="https://en.wikipedia.org/wiki/Kdb%2B">the wikipedia</a>,</p>
+<blockquote>
+  <p><em>“kdb+ is a high-performance column-store database that was designed to
+process and store large amounts of data… created with financial
+institutions in mind… At the core of kdb+ is the built-in programming
+language, q, a concise, expressive query array language, and dialect of the
+language APL”</em></p>
+</blockquote>
+
+<p>Although q is also a functional programming language, it has many features that
+make it different from other conventional languages such as Haskell, OCaml,
+etc. Given this situation, we’ll try to provide an overview of q basics,
+connecting the missing pieces to our previous knowledge on functional
+programming, using Scala and Spark to guide the explanations. We hope it also
+works in the opposite direction, so q programmers can also benefit from this
+introduction, which will be divided into the following posts:</p>
+
+<ol>
+  <li><a href="https://www.hablapps.com/blog/2021/04/19/q-as-an-impure-functional-language.html">Q as an (impure) functional language</a></li>
+  <li>Q as an array processing language</li>
+  <li>Q as a query language for kdb+</li>
+</ol>
+
+<p>The first post introduces q as a functional language, showing the main q
+features that are already familiar to the conventional functional programmer
+which could be used from the very first day. The second post will put focus on
+q as an array processing language, which is probably the main source of q
+weirdness, so we’ll try to connect it to existing theory on the functional
+paradigm. Finally, the last post will introduce q and kdb+ as a query language
+and a column-oriented database, respectively, to make the data engineer happy.</p>
+
+<h2 id="why-q">Why q?</h2>
+
+<p>Each day, we set aside a time to experiment with new technologies, and we are
+especially interested on functional languages. A colleague from the Scala
+community pointed us towards q. The following items summarise the alleged
+language benefits why we decided to give it a go:</p>
+
+<ul>
+  <li>Q is fast, sooo fast</li>
+  <li>Q is a functional query language</li>
+  <li>Q is a well-founded language that relies on APL</li>
+  <li>Q is highly demanded in the financial industry</li>
+  <li>Q is quite a challenge</li>
+</ul>
+
+<p>After a few months of reading q material and coding, we can confirm that none
+of the previous items is a myth. Although we feel that we still have a long way
+to master q/kdb, we are confident that we have now a good perspective on how
+hard it is to learn this language. In fact, reflecting this experience is
+perhaps the major contribution of this series of posts. Having said so, <a href="https://www.hablapps.com/blog/2021/04/19/q-as-an-impure-functional-language.html">we’re
+ready to go now!</a></p>
+
+<p><em>Post Picture: Momento de Transición, Salvador Dalí (1934)</em></p>
+
+
+        </div>
+
+        <div class="tags">
+            
+        </div>
+
+        
+        
+    </div>
+</div>
+
+
+    </div>
+</section>
+<section class="section">
+    <div class="container">
+        <div class="has-text-centered">
+            <p>Theme built by <a href="https://www.csrhymes.com">C.S. Rhymes</a></p>
+        </div>
+    </div>
+</section>
+<script src="/assets/js/app.js" type="text/javascript"></script>
+</body>
+</html>
+
