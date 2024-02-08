@@ -1,22 +1,22 @@
 ---
 layout: post
-title: "KX Insights: data analytics made simple"
+title: "Kx Insights Enterprise: data analytics made simple"
 author: Cristian Pérez Corral, Christian Aberturas López
 image: /img/butterfly-ship.jpg
 toc: true
 ---
 
-# KX Insights: Simplifying Data Analytics
+# Kx Insights Enterprise: Simplifying Data Analytics
 
-This post serves as a concise exploration of the versatile capabilities within [**KX Insights**](https://kx.com/products/kdb-insights/), highlighting its role as the premier cloud-based platform for efficient time series analysis. Leveraging the robust capabilities of kdb+ vector databases, this tool stands out not only for its exceptional speed but also for empowering users— particularly those without advanced technical expertise— to seamlessly develop data ingestion processes, query engines, and visualizations. The post will be structured as follows:
+This post serves as a concise exploration of the versatile capabilities within [**Kx Insights Enterprise**](https://kx.com/products/kdb-insights/), highlighting its role as the premier cloud-based platform for efficient time series analysis. Leveraging the robust capabilities of kdb+ vector databases, this tool stands out not only for its exceptional speed but also for empowering users— particularly those without advanced technical expertise— to seamlessly develop data ingestion processes, query engines, and visualizations. The post will be structured as follows:
 
 - [Use Case](#use-case): Delving into a specific use case, we will employ an illustrative example using telecommunication network data. This section aims to explain the kind of data we start with and the functionality we want to derive from it.
 
-- [*Was it always this easy?*](#was-it-always-this-easy): In this first technical section, we will guide you through establishing a straightforward data pipeline. It explores the steps involved in gathering key stream data and demonstrates how to leverage KX Insights' capabilities for insightful analysis. The overall aim is to highlight the simplicity of working with the tool.
+- [*Was it always this easy?*](#was-it-always-this-easy): In this first technical section, we will guide you through establishing a straightforward data pipeline. It explores the steps involved in gathering key stream data and demonstrates how to leverage Kx Insights Enterprise' capabilities for insightful analysis. The overall aim is to highlight the simplicity of working with the tool.
 
 - [*The Hardest; The Easier*](#the-hardest-the-easiest): This section takes a deeper dive by introducing a more intricate pipeline, showcasing the tool's adaptability and advanced capabilities. It aims to reveal the tool's capacity to handle complex scenarios and provide solutions even when faced with challenges.
 
-As we progress through these sections, you will gain a comprehensive understanding of how KX Insights transforms intricate time series analysis tasks into manageable and insightful processes, making it an invaluable asset for both seasoned professionals and those new to the field.
+As we progress through these sections, you will gain a comprehensive understanding of how Kx Insights Enterprise transforms intricate time series analysis tasks into manageable and insightful processes, making it an invaluable asset for both seasoned professionals and those new to the field.
 
 > ℹ️ *To facilitate your engagement with the post, please refer to the following [Github repository](https://github.com/hablapps/insights-demohttps://github.com/hablapps/insights-demo). There you will find sample data, code snippets, schemas, and other utilities that will allow you to reproduce the results from this report.*
 
@@ -31,21 +31,21 @@ Let's consider a scenario where we are a telecommunications (telco) company deep
 
 Basically, these records show information about calls from users located at a certain longitude and latitude, through a specific cell of the telecommunication network. To analyse this data, we will create comprehensive dashboards that visually represent key metrics. We have identified specific elements that will be pivotal in enhancing our operational understanding:
 
-* **User Distribution Heatmap**: Our objective is to gain insights into the geographical distribution of our users in real-time. The User Distribution Heatmap within KX Insights will vividly illustrate the concentration of our current users, allowing us to promptly identify high-demand areas.
+* **User Distribution Heatmap**: Our objective is to gain insights into the geographical distribution of our users in real-time. The User Distribution Heatmap within Kx Insights Enterprise will vividly illustrate the concentration of our current users, allowing us to promptly identify high-demand areas.
 
-* **Network Performance Analysis (Line Graph)**: Understanding the impact of network density on speed is critical for ensuring a seamless user experience. Through KX Insights, we plan to deploy a Line Graph that dynamically illustrates network upload and download speed variability, enabling proactive optimization of our network performance.
+* **Network Performance Analysis (Line Graph)**: Understanding the impact of network density on speed is critical for ensuring a seamless user experience. Through Kx Insights Enterprise, we plan to deploy a Line Graph that dynamically illustrates network upload and download speed variability, enabling proactive optimization of our network performance.
 
-* **User Location Tracker**: The ability to locate users within a specific geography is essential for targeted interventions and optimizations. KX Insights will provide real-time information on the geographical whereabouts of our users, facilitating strategic decision-making.
+* **User Location Tracker**: The ability to locate users within a specific geography is essential for targeted interventions and optimizations. Kx Insights Enterprise will provide real-time information on the geographical whereabouts of our users, facilitating strategic decision-making.
 
-* **Failure Analysis TreeMap**: Identifying and resolving issues promptly is key to maintaining a high-quality service. A TreeMap, powered by KX Insights, will pinpoint users experiencing difficulties with their connection, enabling us to swiftly address issues and ensure a seamless communication experience for our users.
+* **Failure Analysis TreeMap**: Identifying and resolving issues promptly is key to maintaining a high-quality service. A TreeMap, powered by Kx Insights Enterprise, will pinpoint users experiencing difficulties with their connection, enabling us to swiftly address issues and ensure a seamless communication experience for our users.
 
-For our development journey, we've chosen to leverage the use case outlined earlier for two compelling reasons: the data's temporal nature, allowing for the utilization of time series analysis tools, and its high density. By doing so, we aim not only to demonstrate the prowess of KX Insights but also to shed light on the underlying machinery powering it—the kdb+ database. 
+For our development journey, we've chosen to leverage the use case outlined earlier for two compelling reasons: the data's temporal nature, allowing for the utilization of time series analysis tools, and its high density. By doing so, we aim not only to demonstrate the prowess of Kx Insights Enterprise but also to shed light on the underlying machinery powering it—the kdb+ database. 
 
 > ℹ️ *Please note that the data presented is specifically crafted for this illustrative example and does not originate from real telecommunication sources.*
 
 # Was it Always This Easy?
 
-Our decision to use KX Insights for implementing the use case described in the last section is driven not only by the nature of our data, characterized by a vast volume of real-time information, but also by the platform's exceptional capabilities in constructing functional pipelines, executing complex queries, and delivering compelling visualizations. To appreciate these capabilities, let's suppose we would need to construct a similar architecture using only kdb+/q and other KX tools. Then, the question arises: How challenging would this endeavor be? Here, we succinctly outline some of the crucial steps that should be undertaken:
+Our decision to use Kx Insights Enterprise for implementing the use case described in the last section is driven not only by the nature of our data, characterized by a vast volume of real-time information, but also by the platform's exceptional capabilities in constructing functional pipelines, executing complex queries, and delivering compelling visualizations. To appreciate these capabilities, let's suppose we would need to construct a similar architecture using only kdb+/q and other KX tools. Then, the question arises: How challenging would this endeavor be? Here, we succinctly outline some of the crucial steps that should be undertaken:
 
 1. **Build a Kafka Consumer:** Constructing a Kafka consumer entails delving into the [API](https://github.com/KxSystems/kafka), understanding its intricacies, and developing the necessary infrastructure to facilitate seamless data consumption.
 
@@ -55,7 +55,7 @@ Our decision to use KX Insights for implementing the use case described in the l
 
 Beyond these tasks, there's the challenge of working with an event handler for streaming data, which is not always straightforward. Additionally, packaging all these components into a black-box-like application is necessary to empower the entire data team to work with it, regardless of their technical expertise. Moreover, generalizing this solution for any conceivable use case poses an even more significant undertaking.
 
-The solution presented in this post using [KX Insights Enterprise](https://kx.com/products/kdb-insights-enterprise/) wraps all this complexity in a user-friendly web interface, eliminating the need for the data team to possess intricate technical knowledge. To walk the reader through this tool as easily as possible, we will follow the recommended steps of KX Insights, which can be seen in the following image:
+The solution presented in this post using [KX Insights Enterprise](https://kx.com/products/kdb-insights-enterprise/) wraps all this complexity in a user-friendly web interface, eliminating the need for the data team to possess intricate technical knowledge. To walk the reader through this tool as easily as possible, we will follow the recommended steps of Kx Insights Enterprise, which can be seen in the following image:
 
 ![]({{ site.baseurl }}/assets/2023/12/19/overview.png)
 
@@ -93,7 +93,7 @@ Let's create a pipeline for the ingestion of telephone data, provided by a Kafka
 
 ![]({{ site.baseurl }}/assets/2023/12/19/basic_ppline.png)
 
-We will be writing in a database stored in the KX Insights architecture, but this is not the only place we can store the captured data. Some of the other options are a Kafka Topic, Amazon S3, and more. If you want to delve deeper into the pipeline operators, you can refer to the [documentation](https://code.kx.com/insights/1.8/enterprise/ingest/pipeline/operators/index.html).
+We will be writing in a database stored in the Kx Insights Enterprise architecture, but this is not the only place we can store the captured data. Some of the other options are a Kafka Topic, Amazon S3, and more. If you want to delve deeper into the pipeline operators, you can refer to the [documentation](https://code.kx.com/insights/1.8/enterprise/ingest/pipeline/operators/index.html).
 
 Before having a functional pipeline, a couple of things need to be done.
 
@@ -111,7 +111,7 @@ The magic of Insights lies precisely in the fact that, with a minimal amount of 
 
 ### Querying the data
 
-We will need to understand how the data is stored to query it effectively. KX Insights supports three types of storage tiers: **RDB, IDB, and HDB**, each with specific characteristics:
+We will need to understand how the data is stored to query it effectively. Kx Insights Enterprise supports three types of storage tiers: **RDB, IDB, and HDB**, each with specific characteristics:
 
 - RDB stores only real-time data, with just a small amount of timelapse.
 - IDB stores data as intervals from real time, and from time to time, the pipeline will send a signal indicating either the start or the end of a new interval, and then all the data will be stored in IDB as batches.
@@ -126,6 +126,10 @@ To examine the data, let's navigate to the "Query" section, where we will encoun
 ![]({{ site.baseurl }}/assets/2023/12/19/query_basic.png)
 
 Once here, we have three options for querying the data: using the API, employing SQL, or utilizing q. By using q, we can perform various transformations with simple commands, so let's proceed with it. As we observed in the pipeline, we are storing the data in the `main` table and querying from its stream tier _rdb_.
+
+> ❓ *In Kx Insights Enterprise, querying can be conducted through two primary avenues: the native q language and the API. The q language allows for detailed control and optimization of queries, suitable for complex data manipulation across various databases (RDB, IDB, HDB). 
+>  In contrast, the [GetData API](https://code.kx.com/insights/1.3/microservices/data-access/getData.html) presents a more abstracted and streamlined querying interface. This design conceals the precise storage location of the data, thereby obviating the necessity for comprehensive knowledge of the q language. Such an approach significantly simplifies the process of data access and integration.
+> Looking ahead, Kx Insights Enterprise will prioritize the use of the API for data queries over the native q language. This strategic preference is designed to standardize access methods and significantly enhance the usability and efficiency of data querying across the platform. This evolution in querying methodology has been exemplified in the use of [Dashboards](#stream-connectors).*
 
 ![]({{ site.baseurl }}/assets/2023/12/19/query1.png)
 
@@ -143,7 +147,7 @@ Now that we have stored the data, what about analyzing it? This section allows u
 
 ##### Stream Connectors
 
-As in the dashboards post, when you declare a view in KX Insights, you have to create a data source that will ingest data from a database. As mentioned before, Insights has three different default databases: RDB, IDB, and HDB. As we are analyzing real-time data, most of the time we will ingest from RDB, as seen below (image from heatmap datasource).
+As in the dashboards post, when you declare a view in Kx Insights Enterprise, you have to create a data source that will ingest data from a database. As mentioned before, Insights has three different default databases: RDB, IDB, and HDB. As we are analyzing real-time data, most of the time we will ingest from RDB, as seen below (image from heatmap datasource).
 
 ![]({{ site.baseurl }}/assets/2023/12/19/views_sources.png)
 
@@ -213,14 +217,14 @@ To visualize the errors, we have created a treemap where we represent the users 
 
 Throughout our exploration, it has become abundantly clear that KX Insights Enterprise stands out as an exceedingly convenient and proficient tool for crafting bespoke data analysis services. Its capabilities extend far beyond mere simplification – it substantially streamlines the complexities inherent in pipeline construction, data querying, and visualization. Remarkably, this tool empowers us to undertake such endeavors without the extensive technical expertise traditionally associated with similar projects. Consequently, we now find ourselves in possession of a thoroughly comprehensive and fully operational real-time data service.
 
-Should you wish to gain a more profound understanding of this tool, we strongly recommend following the latest KX Academy demonstrations pertaining to KX Insights. While certain aspects covered in this post may coincide with these demonstrations, leveraging all accessible resources will enhance your ability to construct more extensive data-oriented systems.
+Should you wish to gain a more profound understanding of this tool, we strongly recommend following the latest KX Academy demonstrations pertaining to Kx Insights Enterprise. While certain aspects covered in this post may coincide with these demonstrations, leveraging all accessible resources will enhance your ability to construct more extensive data-oriented systems.
 
 - *Build and backtest scalable trading strategies using real-time and historical tick data*: [KX Academy - Finance](https://code.kx.com/insights/1.8/enterprise/recipes/finance.html).
 - *Manufacturing Tutorial: Apply deep neural networks to streaming IoT data using MQTT and Tensorflow*: [KX Academy - Manufacturing](https://code.kx.com/insights/1.8/enterprise/recipes/manufacturing.html).
 - *Integrate Kafka and kdb+ for real-time telemetry*: [KX Academy - Kafka Integration](https://code.kx.com/insights/1.8/enterprise/recipes/kafkaread.html).
 - *Drag and Drop Application Design with kdb Insights Enterprise, Eoin Killeen*: [KX Community Meetup - Belfast](https://kx.com/videos/drag-and-drop-application-design-with-kdb-insights-enterprise-at-community-meetup-belfast/)
 
-Should you desire to delve further into the technical aspects, you have the option to construct your own data ingestion process utilizing KX Insights, bypassing reliance on the web interface. The guidance provided in this post will assist you in navigating this undertaking:
+Should you desire to delve further into the technical aspects, you have the option to construct your own data ingestion process utilizing Kx Insights Enterprise, bypassing reliance on the web interface. The guidance provided in this post will assist you in navigating this undertaking:
 
 - *Getting Started with kdb Insights*: [Treliant - Getting Started](https://www.treliant.com/knowledge-center/getting-started-with-kdb-insights/).
 
@@ -228,7 +232,7 @@ Finally, for a comprehensive collection of schemas, code snippets, and additiona
 
 - GitHub Repository: [Habla Computing](https://github.com/hablapps/insights-demo)
 
-Explore the full set of materials to delve deeper into the technical details and implementations discussed in this content. Please let us know if you encounter any difficulties, and have fun with KX Insights!
+Explore the full set of materials to delve deeper into the technical details and implementations discussed in this content. Please let us know if you encounter any difficulties, and have fun with Kx Insights Enterprise!
 
 ## Acknowledgements
 
