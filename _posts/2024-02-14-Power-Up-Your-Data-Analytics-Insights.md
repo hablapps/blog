@@ -57,7 +57,7 @@ Beyond these tasks, there's the challenge of working with an event handler for s
 
 The solution presented in this post using [KX Insights Enterprise](https://kx.com/products/kdb-insights-enterprise/) wraps all this complexity in a user-friendly web interface, eliminating the need for the data team to possess intricate technical knowledge. To walk the reader through this tool as easily as possible, we will follow the recommended steps of Kx Insights Enterprise, which can be seen in the following image:
 
-![]({{ site.baseurl }}/assets/2023/12/19/overview.png)
+![]({{ site.baseurl }}/assets/2024/02/14/overview.png)
 
 ### Deploying the database
 
@@ -76,7 +76,7 @@ Our database (which we will name `db-telco`) will include the `main` table. This
 - `lng`: The longitude of the device from which the event is taking place (float type).
 - `cellDistance`: The distance to the cell of the device (float type).
 
-![]({{ site.baseurl }}/assets/2023/12/19/schema_main.png)
+![]({{ site.baseurl }}/assets/2024/02/14/schema_main.png)
 
 After creating the schemas for the table, we save and click on **Deploy**, and with that, we have the database up and running!
 
@@ -91,7 +91,7 @@ When it comes to data ingestion, pipelines are employed. The tools provided by K
 
 Let's create a pipeline for the ingestion of telephone data, provided by a Kafka service. To achieve this, having chosen Kafka as the data source (selecting the corresponding broker and topic), JSON as the decoder, the schema of the `main` table seen earlier, and writing to that table, we end up with the following:
 
-![]({{ site.baseurl }}/assets/2023/12/19/basic_ppline.png)
+![]({{ site.baseurl }}/assets/2024/02/14/basic_ppline.png)
 
 We will be writing in a database stored in the Kx Insights Enterprise architecture, but this is not the only place we can store the captured data. Some of the other options are a Kafka Topic, Amazon S3, and more. If you want to delve deeper into the pipeline operators, you can refer to the [documentation](https://code.kx.com/insights/1.8/enterprise/ingest/pipeline/operators/index.html).
 
@@ -101,11 +101,11 @@ Firstly, as we are getting JSON-format data, we will have to decode it. The data
 
 > ℹ️ *This step must be included because the captured data is in JSON format. If we would have CSV-like streaming data, we wouldn't need to transform it to tables, as the usual interpretation of CSV is table-like.*
 
-![]({{ site.baseurl }}/assets/2023/12/19/basic_ppline_map.png)
+![]({{ site.baseurl }}/assets/2024/02/14/basic_ppline_map.png)
 
 Additionally, considering the potentially high data density, it is advisable to incorporate an intermediate step before writing to the database – an Apply function. This function facilitates a gradual transfer of data to the writing process at a more measured pace, storing it in batches. By minimizing the frequency of database writer calls, we mitigate the risk of efficiency reduction. This practice is recommended to prevent component overload, which could otherwise result in processes being terminated due to out-of-memory (OOM) issues. It's worth noting that this technique is commonly employed in other platforms for real-time data ingestion, underscoring its effectiveness and reliability.
 
-![]({{ site.baseurl }}/assets/2023/12/19/basic_ppline_apply.png)
+![]({{ site.baseurl }}/assets/2024/02/14/basic_ppline_apply.png)
 
 The magic of Insights lies precisely in the fact that, with a minimal amount of code, we have managed to deploy a real-time massive data ingestion pipeline. You don't always need to be technical to work with data!
 
@@ -123,7 +123,7 @@ Therefore, the streaming data will go through **RDB → IDB → HDB**. As we are
 
 To examine the data, let's navigate to the "Query" section, where we will encounter something like this:
 
-![]({{ site.baseurl }}/assets/2023/12/19/query_basic.png)
+![]({{ site.baseurl }}/assets/2024/02/14/query_basic.png)
 
 Once here, we have three options for querying the data: using the API, employing SQL, or utilizing q. By using q, we can perform various transformations with simple commands, so let's proceed with it. As we observed in the pipeline, we are storing the data in the `main` table and querying from its stream tier _rdb_.
 
@@ -131,15 +131,15 @@ Once here, we have three options for querying the data: using the API, employing
 >  In contrast, the [GetData API](https://code.kx.com/insights/1.3/microservices/data-access/getData.html) presents a more abstracted and streamlined querying interface. This design conceals the precise storage location of the data, thereby obviating the necessity for comprehensive knowledge of the q language. Such an approach significantly simplifies the process of data access and integration.
 > Looking ahead, Kx Insights Enterprise will prioritize the use of the API for data queries over the native q language. This strategic preference is designed to standardize access methods and significantly enhance the usability and efficiency of data querying across the platform. This evolution in querying methodology has been exemplified in the use of [Dashboards](#stream-connectors).*
 
-![]({{ site.baseurl }}/assets/2023/12/19/query1.png)
+![]({{ site.baseurl }}/assets/2024/02/14/query1.png)
 
 We can even do a little analysis of the speed of the network data using the "Visual" window below, as follows:
 
-![]({{ site.baseurl }}/assets/2023/12/19/query2.png)
+![]({{ site.baseurl }}/assets/2024/02/14/query2.png)
 
 And also, using PyKX, we can check the different statistics of the table as easily as working with Pandas!
 
-![]({{ site.baseurl }}/assets/2023/12/19/query3.png)
+![]({{ site.baseurl }}/assets/2024/02/14/query3.png)
 
 ### Enjoying the views
 
@@ -149,29 +149,29 @@ Now that we have stored the data, what about analyzing it? This section allows u
 
 As in the dashboards post, when you declare a view in Kx Insights Enterprise, you have to create a data source that will ingest data from a database. As mentioned before, Insights has three different default databases: RDB, IDB, and HDB. As we are analyzing real-time data, most of the time we will ingest from RDB, as seen below (image from heatmap datasource).
 
-![]({{ site.baseurl }}/assets/2023/12/19/views_sources.png)
+![]({{ site.baseurl }}/assets/2024/02/14/views_sources.png)
 
 Also, as in the query engine, you can just use the Insights API to query the data from any of those databases, as you can see in the following image:
 
-![]({{ site.baseurl }}/assets/2023/12/19/views_api.png)
+![]({{ site.baseurl }}/assets/2024/02/14/views_api.png)
 
 ##### Heatmap
 
 First, we have created a heatmap that updates in real-time. This innovative heatmap dynamically illustrates user density across, in this case, Chicago. This live update feature ensures that the data displayed is always current, providing an accurate and up-to-the-minute view of network performance. This information enables us to optimize network coverage and capacity where it's most needed.
 
-![]({{ site.baseurl }}/assets/2023/12/19/heatmap_gr.png)
+![]({{ site.baseurl }}/assets/2024/02/14/heatmap_gr.png)
 
 ##### Speed
 
 We have also created a dashboard where we plot both the upload and download speeds of different connections in real-time. This gives us information about how our network is working in general terms. In essence, this speed tracking dashboard is a key component in our toolkit, enabling us to continuously monitor and improve the overall health and performance of our network.
 
-![]({{ site.baseurl }}/assets/2023/12/19/volumes.png)
+![]({{ site.baseurl }}/assets/2024/02/14/volumes.png)
 
 ##### Tracker
 
 We have created a dashboard that acts as a tracker, allowing us to follow the locations of the different connections that the user makes. It maps out the geographical journey of users by pinpointing where and when they establish network connections. This level of detailed tracking is invaluable for understanding user mobility and network usage patterns.
 
-![]({{ site.baseurl }}/assets/2023/12/19/tracker_zoomed.png)
+![]({{ site.baseurl }}/assets/2024/02/14/tracker_zoomed.png)
 
 Up until now, our data ingestion has revolved around high-density, real-time data utilizing the fundamental modules offered by KX Insights Enterprise. Moreover, we've successfully illuminated the insights derived from this data through the integration of Dashboards. Consequently, the inquiry arises: how can we further enhance this process?
 
@@ -183,7 +183,7 @@ Let's create the `errs` table. This new table will be used for a subsequent grou
 
 - `count0`: This counts the errors that have occurred in the network in the grouping (int type).
 
-![]({{ site.baseurl }}/assets/2023/12/19/schema_errs.png)
+![]({{ site.baseurl }}/assets/2024/02/14/schema_errs.png)
 
 Presently, our focus shifts towards storing data in this context. The collection of information concerning users with the highest error rates holds significant utility for promptly addressing their concerns, resolving issues, and maintaining client satisfaction. This entails bifurcating our data stream into two distinct segments: the previously highlighted stream that populates the `main` table, and the one under consideration here. To facilitate error storage, we intend to aggregate the data, aiming for the utmost precision in error-related information.
 
@@ -197,21 +197,21 @@ Once our _Timer Window_ has stored the last minute of data, we will aggregate it
 
 Once done so, we will store our data in the `errs` table. Using _Apply Schema_ again will work out.
 
-![]({{ site.baseurl }}/assets/2023/12/19/pipelineComplex.png)
+![]({{ site.baseurl }}/assets/2024/02/14/pipelineComplex.png)
 
 As we can see, repeated modules have the same name, with a numeric identification. To change it for clarity, we can **Right Click** → **Rename Node** and write down the desired name for each node. Then, we would have our pipeline finished, as something like this:
 
-![]({{ site.baseurl }}/assets/2023/12/19/pipelineComplexFinal.png)
+![]({{ site.baseurl }}/assets/2024/02/14/pipelineComplexFinal.png)
 
 Having established our pipeline for loading the `errs` table with data, the subsequent step involves verification to ensure its functionality. To accomplish this, it is necessary to return to the query engine and modify our code statement accordingly, querying from the newly created table to assess its operational status.
 
-![]({{ site.baseurl }}/assets/2023/12/19/query_errs.png)
+![]({{ site.baseurl }}/assets/2024/02/14/query_errs.png)
 
 And _voilà_, we have our high error rate users stored!
 
 To visualize the errors, we have created a treemap where we represent the users who have experienced the most errors in the last few minutes. By categorizing and visualizing the errors encountered by our users, this treemap enables us to quickly identify and address the most common and pressing issues. This dashboard does not use the RDB but the IDB in order to aggregate through more time, so we are always aware of the last-minute state of user experience, allowing for swift and proactive interventions.
 
-![]({{ site.baseurl }}/assets/2023/12/19/errors.png)
+![]({{ site.baseurl }}/assets/2024/02/14/errors.png)
 
 ## Conclusions
 
