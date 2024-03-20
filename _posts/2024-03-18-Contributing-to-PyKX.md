@@ -1,28 +1,32 @@
 # Contributing to PyKX
+
 ## Introduction
-Contributing to an Open Source project can be daunting at first, but if you are proficient in both Python and Q, there is a relatively simple way to contribute to OSS.
+
+Contributing to an Open Source project can be daunting at first glance, but if you have some know-how in both Python and Q, you have an opportunity to become a contributor in KX's PyKX library.
 
 ### Enter PyKX
-[PyKX]() is a library tailored towards Python users that aims to bring them closer to the KDB+/Q environment by enabling the use of Q from a Python environment and viceversa. It also provides conversion between Python and Q types, making migrations from Python to q as seamless as possible. We dedicated two fantastic articles that went into a lot more detail about this migration process [here]() and [here](). More specifically, we laid down a simple path that users should follow if they wished to perform a similar kind of migration.
+
+[PyKX]() is a library tailored towards Python users that aims to bring them closer to the KDB+/Q environment by enabling the use of Q from a Python environment and vice-versa. It also provides conversion between Python and Q types, making migrations from Python to Q as seamless as possible. We dedicated two fantastic articles that went into a lot more detail about this migration process [here]() and [here](). More specifically, we laid down a simple path that users should follow if they wished to perform a similar kind of migration.
 
 However, that's not the topic of today's blog post. As we have already established, PyKX is the perfect gateway into Open Source development for those with knowledge of both Python and Q, and in this article we will give you a step by step guide on how we  implemented a simple function and contributed to this fantastic library.
 
 Since we had some previous knowledge on [pandas](), we decided to tackle the pandas API that the PyKX team had been working on for a while. From our previous efforts with this API, we located a few functions that were in need of an implementation, so once we had our goals set we got down to business!
 
 ### Setting up the development environment
+
 The very first thing you should do after setting up your environment should be to fork [KxSystems/pykx]() into your own repository where you have permissions to create branches and do some actual work.
 
-The first roadblock for us however was the environment setup, since we hadn't worked on a Python library before. If you land on their [GitHub repository]() like we did, chances are you will take a look at their README. This is a really nice introduction to what PyKX is and their goals with the library, but for this section we will focus on the [`Building from Source`](https://github.com/github/pages-gem/issues/752) section.
+If you land on their [GitHub repository]() like we did, chances are you will take a look at their README. This is a really nice introduction to what PyKX is and their goals with the library, but for this section we will focus on the [`Building from Source`](https://github.com/github/pages-gem/issues/752) section.Here, you should follow their instructions carefully. In our case, we decided to install on Linux, since it is our platform of choice for these kind of projects, but Windows and OS X are viable options as well!
 
-Here, you should follow their instructions carefully. In our case, we decided to install on Linux, since it is our platform of choice for these kind of projects, but installations steps are available for those using Windows as well!
+Be sure to take a look at their `DEVELOPING.md` file for some development guidelines. This file contains the team's code styling preferences, so be sure to stick to them.
 
-As a side note, we were not able to setup the environment on Fedora Linux, but we were successful on Ubuntu both on bare metal and on [WSL]().
-
-The quick by step goes as follows:
+The quick step by step goes as follows:
 
  1. Install the build dependencies.
  2. Create the Python virtual environment (venv from now on) and activate it.
- 3. Run `pip3 install -U '.[all]'` to build the library and make it available on your venv.
+ 3. (Optional) Run `pip3 install -U '.[all]'` to build the library and make it available on your venv.
+
+Be aware that the last step may take a few minutes depending on your hardware.
 
 ---
 
@@ -48,22 +52,38 @@ With that done, you should be able to run the tests for the whole project with t
 python -m pytest -vvv -n 0 --no-cov --junitxml=report.xml
 ```
 
----
-
-_**Note**_:
-
-At the end of the post we will provide some useful commands, as well as some general tips to developing for this library.
-
----
+Again, be aware that this command may take several minutes to complete, since it's running _every_ test. Since this is completely optional at this point, feel free to skip it. Later on we will provide a command to run a single test, which makes the whole development experience much more streamlined.
 
 **Congratulations!** You have now set your development environment up and are ready to start writing some code!
 
 ### Useful tools
-In our case, we used mostly VSCode when developing for this library, but feel free to use your editor of choice.
 
-Inside your venv, be sure to have Jupyter installed to have quick access to your function after the build. This is particularly usefull when developing some tests. A q kernel for Jupyter may also be handy when debugging your q code.
+ * As for the IDE / text editor, feel free to use your Python editor of choice.
+
+ * Inside your venv, be sure to have Jupyter installed to have quick access to your function after the build is completed. This is particularly useful when developing tests. A [Q kernel for Jupyter]() may also be handy when debugging your Q code. As an alternative, a [VSCode plugin]() that makes you able to run Q code also exists.
+
+---
+
+_**Note**_:
+
+To install Jupyter inside your venv, run the following command after activating it:
+
+```sh
+pip3 install jupyter
+```
+
+Or
+
+```sh
+pip3 install jupyterlab
+```
+
+If you would rather use the lab environment.
+
+---
 
 ## Development
+
 With all of that done, we will focus on developing a simple function for the pandas API: `count`.
 
 After taking a decision on the function we will be developing, since we are making a contribution to the pandas API, we should take a look at what that function actually does. In this particular case, [`count`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.count.html) returns a dictionary of sorts with the columns as the key and the count for each column as the value:
@@ -100,7 +120,7 @@ The implementation should be easy on q: we can just `count` on each column and w
 
 _**Note**_:
 
-Those of you proficient on pandas and Q might have noticed that `count each` doesn't do exactly the same as `df.count()` on pandas. The later doesn't count the null values whereas the q version does. This is intentional in this case, and later on we'll see how we take care of those edge values.
+Those of you proficient on pandas and Q might have noticed that `count each` doesn't do exactly the same as `df.count()` on pandas. The later doesn't count the null values whereas the Q version does. This is intentional in this case, and later on we'll see how we take care of those edge values.
 
 ```q
 q)t
@@ -121,15 +141,15 @@ PyKX's codebase is quite extensive, so we need to make sense of it. We can assum
 
 INSERT DIRECTORY TREE IMAGE HERE
 
-Well, all of them contain code for the pandas API, of course, but where we place it is up to our decision. Is it related to indexing? Then write your function inside `pandas_indexing.py`. Is it a special type of join? Then `pandas_merge.py` is most likely where you want to write it.
+Well, all of them contain code for the pandas API, of course, but where we place it is up to the "family" of functions it belongs to. Is it related to indexing? Then write your function inside `pandas_indexing.py`. Is it a special type of join? Then `pandas_merge.py` is most likely where you want to write it.
 
-In our case, since `count` is a general function, we can place it under `pandas_meta.py`, which contains a plethora of general purpose functions. Inside that file, try to write your implementation around similar functions.
+In our case, since `count` is a general function, we can place it under `pandas_meta.py`, which contains a plethora of general purpose functions. Inside that file, try to write your implementation around similar functions so you can them as reference.
 
  ## Getting familiar with the syntax
 
 As with any new environment you need to work on, it may take a while to get used to it. I would personally look around the different files and try to take mental notes (or regular notes, I won't judge you) on how the functions are implemented, which patterns repeat themselves, which don't, etc... 
 
-If you have done just that for the `pandas_meta.py` file, you may have some questions. What does `@convert_result` and `@api_return` do? Why do most functions use `preparse_computations` on the first line? Let's try to answer those questions.
+If you have done just that for the `pandas_meta.py` file, you may have some questions. What does `@convert_result` and `@api_return` do? Why do so many functions use `preparse_computations` on the first line? Let's try to answer those questions.
 
 Both `@convert_result` and `@api_return` are [decorators](https://peps.python.org/pep-0318/). What that roughly means is that they are able to perform some computation before executing the function and after the fact. In this case, `@convert_result` is defined on that very same file, and does the following:
 
@@ -175,9 +195,71 @@ With this in mind, we can now fully understand the implementation we wrote. In t
 
 ## Testing
 
+Now that we have developed our functions, we would want to write some unit tests for it to make the functionality resilient to code changes. For the pandas API, they are coupled together in the `tests/test_pandas_api.py` file. We can see that in that same directory we have different `test_pandas_*.py` files which contain tests for specific functionality, but most tests for the `pandas_meta.py` file are held here.
+
+Since we are mimicking functionality on the function we developed, our tests should reinforce that fact. For `count` we should test:
+
+ * Counting on a table with null values.
+ * Counting on a table with non-numeric values.
+
+At this point, we could write some code on the test file and hope for the best, but I personally recommend installing Jupyter inside the venv for the project so that whenever we build our library, it becomes available from a Jupyter notebook where we can start building up our test cases. It may look a bit overkill, but for larger functions with many more moving parts, the ability to quickly prototype your test cases could be crucial.
+
+However you may choose to develop your tests, our input for this function could look something like this:
+
+
+```python
+tab = q('([] k1: 0n 2 0n 2 0n ; k2: (`a;`;`b;`;`c))')
+df = tab.pd()
+```
+
+Where we take care of both of our testing cases and make the table available for using both pandas and PyKX functions.
+
+As for the assertions, we are going to take advantage of PyKX's ability to convert between PyKX objects and Python ones to make sure that our function returns the expected values.
+
+A simple assertion could look something like this:
+
+```python
+qcount = tab.count().py()
+pcount = df.count()
+
+assert int(qcount["k1"]) == int(pcount["k1"])
+assert int(qcount["k2"]) == 3
+```
+
+First off we want to run `count` on both the PyKX table and the pandas DataFrame and since the result of our `count` function is a Q dictionary, we can use `.py()` to convert it to a Python one and then perform the actual assertions after that.
+
+After this set of assertions, we should test our `count` function with different parameters:
+
+```python
+qcount = tab.count(axis=1).py()
+pcount = df.count(axis=1)
+
+assert int(qcount[0]) == int(pcount[0])
+assert int(qcount[1]) == 1
+```
+
+```python
+qcount = tab.count(numeric_only=True).py()
+pcount = df.count(numeric_only=True)
+
+assert int(qcount["k1"]) == int(pcount["k1"])
+```
+
+After everything has been taken into consideration, we would want to actually run our test. To do that, we can execute the following command:
+
+```sh
+```
+
+If we wanted to run all tests on a file, we can do it with the following command:
+
+```sh
+```
+
+And that should take care of all of the functionality that `count` provides! Now we only need to use `pflake8` to lint our code, write some documentation and open a pull request.
+
 
 ## Linting
 
 ## Opening a Pull Request
 
-## Conclusions
+## Conclusions and general tips
