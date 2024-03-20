@@ -248,18 +248,37 @@ assert int(qcount["k1"]) == int(pcount["k1"])
 After everything has been taken into consideration, we would want to actually run our test. To do that, we can execute the following command:
 
 ```sh
+TODO
 ```
 
 If we wanted to run all tests on a file, we can do it with the following command:
 
 ```sh
+TODO
 ```
 
-And that should take care of all of the functionality that `count` provides! Now we only need to use `pflake8` to lint our code, write some documentation and open a pull request.
+If all our test cases are well designed and have passed, we should be pretty much good to go! Now we only need to use `pflake8` to lint our code, write some documentation and open a pull request.
 
+### Linting
 
-## Linting
+As mentioned on the `README` file, PyKX should follow the pep8 conventions that the default `pflake8` enforces. Simply running
+`pflake8 {path/to/file}` should tell us if our code follows said rules. In our case, we would have to run it for both the `pandas_meta.py` and `test_pandas_api.py` files. Once the output of `pflake8` shows no warnings, we can move on to documenting our new function.
+
+## Documenting our code
+
+In the case of our `count` function, the documentation should be written on the `docs/user-guide/advanced/Pandas_API.ipynb` notebook. Locate the function "family", take a look at the documentation's structure and use it as a reference. Be sure to provide the function's interface and some examples of use.
 
 ## Opening a Pull Request
 
+As with most open source projects, code additions should be handled through pull requests. If you are not familiar with pull requests, you can take a look at this [guide]() written by GitHub.
+
+Open an issue following its template located at `TODO:foo` and then open a pull request, linking it with the issue and following the template located at `TODO:bar`.
+
 ## Conclusions and general tips
+
+Hopefully we have encouraged you to make your own contribution to PyKX and help grow this fantastic library. After having explained the whole process, here are some quick tips that we found useful when developing our contributions:
+
+ * Try to blend your code as much as possible with the existing codebase.
+ * Follow their programming philosophy as stated on the `DEVELOPING.md` file.
+ * Write thorough tests. They can help you identify "holes" in your logic.
+ * Try to learn as much as possible in the process!
