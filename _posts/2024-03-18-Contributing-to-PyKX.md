@@ -1,3 +1,11 @@
+---
+layout: post
+title: "Contributing to PyKX"
+author: Oscar Nydza Nicpoñ
+image: /img/glass-and-checkerboard.jpg
+toc: true
+---
+
 # Contributing to PyKX
 
 ## Introduction
@@ -6,17 +14,17 @@ Contributing to an Open Source project can be daunting at first glance, but if y
 
 ### Enter PyKX
 
-[PyKX]() is a library tailored towards Python users that aims to bring them closer to the KDB+/Q environment by enabling the use of Q from a Python environment and vice-versa. It also provides conversion between Python and Q types, making migrations from Python to Q as seamless as possible. We dedicated two fantastic articles that went into a lot more detail about this migration process [here]() and [here](). More specifically, we laid down a simple path that users should follow if they wished to perform a similar kind of migration.
+[PyKX](https://code.kx.com/pykx/2.2/index.html) is a library tailored towards Python users that aims to bring them closer to the KDB+/Q environment by enabling the use of Q from a Python environment and vice-versa. It also provides conversion between Python and Q types, making migrations from Python to Q as seamless as possible. We dedicated two fantastic articles that went into a lot more detail about this migration process [here](https://www.habla.dev/blog/2023/07/31/all-roads-lead-to-pykx.html) and [here](https://www.habla.dev/blog/2023/09/15/all-roads-lead-to-kdb-the-technical-counterpart). More specifically, we laid down a simple path that users should follow if they wished to perform a similar kind of migration.
 
-However, that's not the topic of today's blog post. As we have already established, PyKX is the perfect gateway into Open Source development for those with knowledge of both Python and Q, and in this article we will give you a step by step guide on how we  implemented a simple function and contributed to this fantastic library.
+However, that's not the topic of today's blog post. As we have already established, PyKX is the perfect gateway into open source development for those with knowledge of both Python and Q, and in this article we will give you a step by step guide on how we  implemented a simple function and contributed to this fantastic library.
 
-Since we had some previous knowledge on [pandas](), we decided to tackle the pandas API that the PyKX team had been working on for a while. From our previous efforts with this API, we located a few functions that were in need of an implementation, so once we had our goals set we got down to business!
+Since we had some previous knowledge on [pandas](https://pandas.pydata.org/), we decided to tackle the pandas API that the PyKX team had been working on for a while. This module allows for the use of pandas-like syntax in an effort to make migrating code from pandas to PyKX as streamlined as possible. With this syntax, we would ideally be able to use PyKX as a drop-in replacement for pandas without too many headaches. However, from our previous efforts with this API, we located a few functions that were in need of an implementation so, since this is an open source project, we decided to implement them ourselves!
 
 ### Setting up the development environment
 
-The very first thing you should do after setting up your environment should be to fork [KxSystems/pykx]() into your own repository where you have permissions to create branches and do some actual work.
+The very first thing you should do after setting up your environment should be to fork [KxSystems/pykx](https://github.com/KxSystems/pykx) into your own repository where you have permissions to create branches and do some actual work.
 
-If you land on their [GitHub repository]() like we did, chances are you will take a look at their README. This is a really nice introduction to what PyKX is and their goals with the library, but for this section we will focus on the [`Building from Source`](https://github.com/github/pages-gem/issues/752) section.Here, you should follow their instructions carefully. In our case, we decided to install on Linux, since it is our platform of choice for these kind of projects, but Windows and OS X are viable options as well!
+If you land on their [GitHub repository](https://github.com/KxSystems/pykx) like we did, chances are you will take a look at their README. This is a really nice introduction to what PyKX is and their goals with the library, but for this section we will focus on the [`Building from Source`](https://github.com/KxSystems/pykx?tab=readme-ov-file#building-from-source) section. Here, you should follow their instructions carefully. In our case, we decided to install on Linux, since it is our platform of choice for these kinds of projects, but Windows and OS X are viable options as well!
 
 Be sure to take a look at their `DEVELOPING.md` file for some development guidelines. This file contains the team's code styling preferences, so be sure to stick to them.
 
@@ -60,7 +68,7 @@ Again, be aware that this command may take several minutes to complete, since it
 
  * As for the IDE / text editor, feel free to use your Python editor of choice.
 
- * Inside your venv, be sure to have Jupyter installed to have quick access to your function after the build is completed. This is particularly useful when developing tests. A [Q kernel for Jupyter]() may also be handy when debugging your Q code. As an alternative, a [VSCode plugin]() that makes you able to run Q code also exists.
+ * Inside your venv, be sure to have Jupyter installed to have quick access to your function after the build is completed. This is particularly useful when developing tests. A [Q kernel for Jupyter](https://github.com/KxSystems/jupyterq) may also be handy when debugging your Q code. As an alternative, a [VSCode plugin](https://marketplace.visualstudio.com/items?itemName=KX.kdb&ssr=false#overview) that makes you able to run Q code also exists.
 
 ---
 
@@ -124,12 +132,18 @@ Those of you proficient on pandas and Q might have noticed that `count each` doe
 
 ```q
 q)t
+```
+```
 a b
 ---
 a 0
 b 1
   2
+```
+```q
 q)count each value flip t
+```
+```
 3 3
 ```
 
@@ -139,7 +153,7 @@ Now that the underlying Q code is clear, we can focus on bringing the functional
 
 PyKX's codebase is quite extensive, so we need to make sense of it. We can assume the source code is inside the `src` directory, and that the pandas API code should be inside the `pandas_api` subdirectory, but there are quite a few Python files inside so... Where do we put our implementation?
 
-INSERT DIRECTORY TREE IMAGE HERE
+![]({{ site.baseurl }}/assets/2024/03/18/dir-tree.png)
 
 Well, all of them contain code for the pandas API, of course, but where we place it is up to the "family" of functions it belongs to. Is it related to indexing? Then write your function inside `pandas_indexing.py`. Is it a special type of join? Then `pandas_merge.py` is most likely where you want to write it.
 
@@ -151,12 +165,23 @@ As with any new environment you need to work on, it may take a while to get used
 
 If you have done just that for the `pandas_meta.py` file, you may have some questions. What does `@convert_result` and `@api_return` do? Why do so many functions use `preparse_computations` on the first line? Let's try to answer those questions.
 
-Both `@convert_result` and `@api_return` are [decorators](https://peps.python.org/pep-0318/). What that roughly means is that they are able to perform some computation before executing the function and after the fact. In this case, `@convert_result` is defined on that very same file, and does the following:
+Both `@convert_result` and `@api_return` are [decorators](https://peps.python.org/pep-0318/). What that roughly means is that they are able to perform some computation before and after executing a function. In this case, `@convert_result` is defined on that very same file, and looks like this:
+
+```python
+def convert_result(func):
+    @api_return
+    def inner(*args, **kwargs):
+        res, cols = func(*args, **kwargs)
+        return q('{[x; y] y!x}', res, cols)
+    return inner
+```
+
+We can see that:
 
  1. Runs the "child" function (in this case, `count`).
  2. It builds a dictionary with the functions return values.
 
-So, with this in mind, we know that what we would want to return in our child function if we were using this decorator would be a list of values and the column names so that we can build a dictionary, and that's exactly what we need to return for `count`!
+So, with this in mind, we know that `count` should return both a list containing the count on each column and the column name itself so it can later on be turned into a dictionary by the decorator.
 
 ---
 
@@ -191,7 +216,9 @@ If you have ever worked with pandas, you might have noticed that many methods sh
  2. Depending on the parameters, it transforms the column values according to them.
  3. It returns a list containing the column values (so, a list of lists) and the column names.
 
-With this in mind, we can now fully understand the implementation we wrote. In this case, the `preparse_computation` takes the `axis` and `numeric_only` values straight from the parameters and for the `skipna` value we pass a `True`, meaning that if we find a null value, it should be dropped. This last hardcoded parameter allows our `count` to behave exactly as the one found on the pandas library!
+With this in mind, we can now fully understand the implementation we wrote. In this case, the `preparse_computation` takes the `axis` and `numeric_only` values straight from the parameters and for the `skipna` value we pass a `True`, meaning that if we find a null value, it should be dropped. This last hardcoded parameter allows our `count` to behave exactly as the one found on the pandas library.
+
+Once that's been taken care of, build the library, open a REPL for a quick test to see if we have `count` available and that it behaves as expected on a simple example and if that's the case, we are ready to move onto testing it!
 
 ## Testing
 
@@ -202,7 +229,7 @@ Since we are mimicking functionality on the function we developed, our tests sho
  * Counting on a table with null values.
  * Counting on a table with non-numeric values.
 
-At this point, we could write some code on the test file and hope for the best, but I personally recommend installing Jupyter inside the venv for the project so that whenever we build our library, it becomes available from a Jupyter notebook where we can start building up our test cases. It may look a bit overkill, but for larger functions with many more moving parts, the ability to quickly prototype your test cases could be crucial.
+At this point, we could write some code on the test file and hope for the best, but I personally recommend installing Jupyter inside the venv for the project so that whenever we build our library, it becomes available from a Jupyter notebook where we can start building up our test cases. It may look a bit overkill, but for larger functions with many more moving parts (like functionality that needs to be adjusted as holes in the logic are located), the ability to quickly prototype your test cases could be crucial.
 
 However you may choose to develop your tests, our input for this function could look something like this:
 
@@ -248,13 +275,13 @@ assert int(qcount["k1"]) == int(pcount["k1"])
 After everything has been taken into consideration, we would want to actually run our test. To do that, we can execute the following command:
 
 ```sh
-TODO
+python3 -m pytest -vvv -n 0 --no-cov --junitxml=report.xml tests/${test_file_name_here}::{test_name_here}
 ```
 
 If we wanted to run all tests on a file, we can do it with the following command:
 
 ```sh
-TODO
+python3 -m pytest -vvv -n 0 --no-cov --junitxml=report.xml tests/${test_file_name_here}
 ```
 
 If all our test cases are well designed and have passed, we should be pretty much good to go! Now we only need to use `pflake8` to lint our code, write some documentation and open a pull request.
@@ -270,9 +297,9 @@ In the case of our `count` function, the documentation should be written on the 
 
 ## Opening a Pull Request
 
-As with most open source projects, code additions should be handled through pull requests. If you are not familiar with pull requests, you can take a look at this [guide]() written by GitHub.
+As with most open source projects, code additions should be handled through pull requests. If you are not familiar with pull requests, you can take a look at this [guide](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request) written by GitHub.
 
-Open an issue following its template located at `TODO:foo` and then open a pull request, linking it with the issue and following the template located at `TODO:bar`.
+Open an issue following its template located at `https://github.com/KxSystems/pykx/tree/main/.github/ISSUE_TEMPLATE` and then open a pull request, linking it with the issue and following the template located at `https://github.com/KxSystems/pykx/tree/main/.github/PULL_REQUEST_TEMPLATE`.
 
 ## Conclusions and general tips
 
@@ -282,3 +309,7 @@ Hopefully we have encouraged you to make your own contribution to PyKX and help 
  * Follow their programming philosophy as stated on the `DEVELOPING.md` file.
  * Write thorough tests. They can help you identify "holes" in your logic.
  * Try to learn as much as possible in the process!
+
+---
+
+Post image: Glass and Checkerboard, Juan Gris, 1917
