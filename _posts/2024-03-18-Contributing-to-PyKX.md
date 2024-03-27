@@ -14,11 +14,50 @@ Contributing to an Open Source project can be daunting at first glance, but if y
 
 ### Enter PyKX
 
-[PyKX](https://code.kx.com/pykx/2.2/index.html) is a library tailored towards Python users that aims to bring them closer to the KDB+/Q environment by enabling the use of Q from a Python environment and vice-versa. It also provides conversion between Python and Q types, making migrations from Python to Q as seamless as possible. We dedicated two fantastic articles that went into a lot more detail about this migration process [here](https://www.habla.dev/blog/2023/07/31/all-roads-lead-to-pykx.html) and [here](https://www.habla.dev/blog/2023/09/15/all-roads-lead-to-kdb-the-technical-counterpart). More specifically, we laid down a simple path that users should follow if they wished to perform a similar kind of migration.
+[PyKX](https://code.kx.com/pykx/2.4/index.html) is a library tailored towards Python users that aims to bring them closer to the KDB+/Q environment by enabling the use of Q from a Python environment and vice-versa. It also provides conversion between Python and Q types, making migrations from Python to Q as seamless as possible. We dedicated two articles that went into a lot more detail about this migration process [here](https://www.habla.dev/blog/2023/07/31/all-roads-lead-to-pykx.html) and [here](https://www.habla.dev/blog/2023/09/15/all-roads-lead-to-kdb-the-technical-counterpart). More specifically, we laid down a simple path that users should follow if they wished to perform a similar kind of migration.
 
 However, that's not the topic of today's blog post. As we have already established, PyKX is the perfect gateway into open source development for those with knowledge of both Python and Q, and in this article we will give you a step by step guide on how we  implemented a simple function and contributed to this fantastic library.
 
-Since we had some previous knowledge on [pandas](https://pandas.pydata.org/), we decided to tackle the pandas API that the PyKX team had been working on for a while. This module allows for the use of pandas-like syntax in an effort to make migrating code from pandas to PyKX as streamlined as possible. With this syntax, we would ideally be able to use PyKX as a drop-in replacement for pandas without too many headaches. However, from our previous efforts with this API, we located a few functions that were in need of an implementation so, since this is an open source project, we decided to implement them ourselves!
+From our previous efforts with PyKX, we noticed that a few pandas API functions were in need of an implementation. This module aims to be a drop-in replacement of pandas syntax as, making migrations as trouble-free as possible. We stumbled upon it module when looking for ways to simplify our code and, since it allows for the use of pandas-like syntax, it was the perfect fit for our needs.
+
+An example of this pandas-like syntax could be the following:
+
+```python
+>df
+   Animal  Max Speed  Max Altitude
+0  Falcon      380.0         570.0
+1  Falcon      370.0         555.0
+2  Parrot       24.0         275.0
+3  Parrot       26.0         300.0
+
+>df.mean(numeric_only=True)
+Max Speed       200.0
+Max Altitude    425.0
+dtype: float64
+```
+
+With PyKX, we could essentially perform the same computation with the same syntax:
+
+```python
+>import pykx as kx
+>t = kx.toq(df)
+>t
+pykx.Table(pykx.q('
+	Animal Max Speed Max Altitude
+	-----------------------------
+	Falcon 380       570         
+	Falcon 370       555         
+	Parrot 24        275         
+	Parrot 26        300         
+'))
+>t.mean(numeric_only=True)
+pykx.Dictionary(pykx.q('
+	Max Speed   | 200
+	Max Altitude| 425
+'))
+```
+
+So, since this is an open source project, we decided to implement those missing functions ourselves!
 
 ### Setting up the development environment
 
@@ -60,13 +99,13 @@ With that done, you should be able to run the tests for the whole project with t
 python -m pytest -vvv -n 0 --no-cov --junitxml=report.xml
 ```
 
-Again, be aware that this command may take several minutes to complete, since it's running _every_ test. Since this is completely optional at this point, feel free to skip it. Later on we will provide a command to run a single test, which makes the whole development experience much more streamlined.
+Again, be aware that this command may take several minutes to complete due to it executing _every_ test. Since this is completely optional at this point, feel free to skip it. Later on we will provide a command to run a single test, which makes the whole development experience much more streamlined.
 
 **Congratulations!** You have now set your development environment up and are ready to start writing some code!
 
 ### Useful tools
 
- * As for the IDE / text editor, feel free to use your Python editor of choice.
+ * As for the IDE / text editor, use your Python editor of choice.
 
  * Inside your venv, be sure to have Jupyter installed to have quick access to your function after the build is completed. This is particularly useful when developing tests. A [Q kernel for Jupyter](https://github.com/KxSystems/jupyterq) may also be handy when debugging your Q code. As an alternative, a [VSCode plugin](https://marketplace.visualstudio.com/items?itemName=KX.kdb&ssr=false#overview) that makes you able to run Q code also exists.
 
@@ -157,7 +196,7 @@ PyKX's codebase is quite extensive, so we need to make sense of it. We can assum
 
 Well, all of them contain code for the pandas API, of course, but where we place it is up to the "family" of functions it belongs to. Is it related to indexing? Then write your function inside `pandas_indexing.py`. Is it a special type of join? Then `pandas_merge.py` is most likely where you want to write it.
 
-In our case, since `count` is a general function, we can place it under `pandas_meta.py`, which contains a plethora of general purpose functions. Inside that file, try to write your implementation around similar functions so you can them as reference.
+In our case, since `count` is a general function, we can place it under `pandas_meta.py`, which contains a plethora of general purpose functions. Inside that file, try to write your implementation around similar functions so you can use them as reference.
 
  ## Getting familiar with the syntax
 
@@ -178,7 +217,7 @@ def convert_result(func):
 
 We can see that:
 
- 1. Runs the "child" function (in this case, `count`).
+ 1. Runs the "child" function (potentially, our implementation for `count`).
  2. It builds a dictionary with the functions return values.
 
 So, with this in mind, we know that `count` should return both a list containing the count on each column and the column name itself so it can later on be turned into a dictionary by the decorator.
@@ -263,28 +302,38 @@ pcount = df.count(axis=1)
 
 assert int(qcount[0]) == int(pcount[0])
 assert int(qcount[1]) == 1
-```
 
-```python
 qcount = tab.count(numeric_only=True).py()
 pcount = df.count(numeric_only=True)
-
+so 
 assert int(qcount["k1"]) == int(pcount["k1"])
 ```
 
 After everything has been taken into consideration, we would want to actually run our test. To do that, we can execute the following command:
 
 ```sh
-python3 -m pytest -vvv -n 0 --no-cov --junitxml=report.xml tests/${test_file_name_here}::{test_name_here}
+python3 -m pytest -vvv -n 0 --no-cov --junitxml=report.xml tests/{test_file_name_here}::{test_name_here}
+```
+
+In our case, this command would look like this:
+
+```sh
+python3 -m pytest -vvv -n 0 --no-cov --junitxml=report.xml tests/test_pandas_api.py::test_pandas_count
 ```
 
 If we wanted to run all tests on a file, we can do it with the following command:
 
 ```sh
-python3 -m pytest -vvv -n 0 --no-cov --junitxml=report.xml tests/${test_file_name_here}
+python3 -m pytest -vvv -n 0 --no-cov --junitxml=report.xml tests/{test_file_name_here}
 ```
 
-If all our test cases are well designed and have passed, we should be pretty much good to go! Now we only need to use `pflake8` to lint our code, write some documentation and open a pull request.
+Or, in our case:
+
+```sh
+python3 -m pytest -vvv -n 0 --no-cov --junitxml=report.xml tests/test_pandas_api.py
+```
+
+If all our test cases are well designed and have passed, we should be pretty much good to go!
 
 ### Linting
 
@@ -303,7 +352,24 @@ Open an issue following its template located at `https://github.com/KxSystems/py
 
 ## Conclusions and general tips
 
-Hopefully we have encouraged you to make your own contribution to PyKX and help grow this fantastic library. After having explained the whole process, here are some quick tips that we found useful when developing our contributions:
+Hopefully we have encouraged you to make your own contribution to PyKX and help grow this fantastic library. Our team has been working on different contributions to the pandas API for the best part of the last few months. Here are some examples of functions that are currently available in PyKX as of writing that were developed by us:
+
+ - `add_prefix` and `add_suffix`
+ - `skew`
+ - `count`
+ - `std`
+
+There are a few more that at the moment are pending a review from the PyKX team. These can be found on the following issue: [KxSystems/pykx/issues/23](https://github.com/KxSystems/pykx/issues/23). We are still working on a third batch of functions, so keep an eye on those issues if you want to be up to date!
+
+Here are some examples of pandas API functions that could be interesting to implement if you are looking for a challenge:
+
+ - [`melt`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.melt.html)
+ - [`rolling`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.rolling.html)
+ - [`clip`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.clip.html)
+
+But there is more to the library than the pandas API! There are plenty more things that could prove interesting to explore like how `toq` works (more info in the `pykx/src/cast.py` file), database management (currently beta, use with the `pykx.db` module) etc.
+
+To finish off, here are some quick tips that we found useful when developing for this library:
 
  * Try to blend your code as much as possible with the existing codebase.
  * Follow their programming philosophy as stated on the `DEVELOPING.md` file.
