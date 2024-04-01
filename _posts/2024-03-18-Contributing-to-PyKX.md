@@ -163,31 +163,6 @@ dtype: int64
 
 The implementation should be easy on q: we can just `count` on each column and we should get the result we want!
 
----
-
-_**Note**_:
-
-Those of you proficient on pandas and Q might have noticed that `count each` doesn't do exactly the same as `df.count()` on pandas. The later doesn't count the null values whereas the Q version does. This is intentional in this case, and later on we'll see how we take care of those edge values.
-
-```q
-q)t
-```
-```
-a b
----
-a 0
-b 1
-  2
-```
-```q
-q)count each value flip t
-```
-```
-3 3
-```
-
----
-
 Now that the underlying Q code is clear, we can focus on bringing the functionality to PyKX. For that, we need to know _where_ to place our function and _how_ to make it available.
 
 PyKX's codebase is quite extensive, so we need to make sense of it. We can assume the source code is inside the `src` directory, and that the pandas API code should be inside the `pandas_api` subdirectory, but there are quite a few Python files inside so... Where do we put our implementation?
@@ -220,7 +195,9 @@ We can see that:
  1. Runs the "child" function (potentially, our implementation for `count`).
  2. It builds a dictionary with the functions return values.
 
-So, with this in mind, we know that `count` should return both a list containing the count on each column and the column name itself so it can later on be turned into a dictionary by the decorator.
+So, since pandas' implementation of `count` seems to follow this pattern (returning a dictionary, that is), we can use this function to build the final result in the shape it must have. We can also see that we need to return a tuple containing the list of results and the column names, both following the same order.
+
+With this information we can move on to developing the function's internal logic.
 
 ---
 
@@ -247,6 +224,21 @@ The second line is the function declaration and here we try to stick to [pandas'
 
 On the last line of code we actually perform the counting on each of our columns' values. If you are familiar with PyKX, you most likely have used `pykx.q` to run Q code from Python, and this is exactly what is going on here. We are running `count each` on our `res` value.
 
+Those of you proficient on pandas and Q may notice that `count each` doesn't do exactly the same as `df.count()` on pandas. The later doesn't count the null values whereas the Q version does. This is intentional in this case, and up next we'll see how we take care of those edge values.
+
+```q
+q)t
+a b
+---
+a 0
+b 1
+  2
+```
+```q
+q)count each value flip t
+3 3
+```
+
 But wait a minute, what does `res` contain? Well, that's a good question. In order to understand that, first we need to take a look at what `preparse_computation` does.
 
 If you have ever worked with pandas, you might have noticed that many methods share a very similar interface: `axis`, `skipna` and `numeric_only`. These parameters, among others, dictate how those methods handle the data. Since they are so common, the PyKX team has developed the `preparse_computation` function to avoid repeating code. I encourage you to take a look at what it does exactly, but in rough terms:
@@ -257,7 +249,29 @@ If you have ever worked with pandas, you might have noticed that many methods sh
 
 With this in mind, we can now fully understand the implementation we wrote. In this case, the `preparse_computation` takes the `axis` and `numeric_only` values straight from the parameters and for the `skipna` value we pass a `True`, meaning that if we find a null value, it should be dropped. This last hardcoded parameter allows our `count` to behave exactly as the one found on the pandas library.
 
-Once that's been taken care of, build the library, open a REPL for a quick test to see if we have `count` available and that it behaves as expected on a simple example and if that's the case, we are ready to move onto testing it!
+Once that's been taken care of, build the library, open a REPL for a quick test to see if we have `count` available and that it behaves as expected on a simple example:
+
+```python
+>import pykx as kx
+>t = kx.toq(df)
+>t
+pykx.Table(pykx.q('
+	 Animal Max Speed Max Altitude
+	 -----------------------------
+	 Falcon 380       570         
+	 Falcon 370       555         
+	 Parrot 24        275         
+	 Parrot 26        300         
+'))
+>t.count()
+pykx.Dictionary(pykx.q('
+    Animal       | 4
+    Max Speed    | 4
+    Max Altitude | 4
+'))
+```
+
+Great! Time to move on to proper testing!
 
 ## Testing
 
