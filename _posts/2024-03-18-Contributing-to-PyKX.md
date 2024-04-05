@@ -10,52 +10,51 @@ toc: true
 
 ## Introduction
 
-Contributing to an Open Source project can be daunting at first glance, but if you have some know-how in both Python and Q, you have an opportunity to become a contributor in KX's PyKX library.
+Contributing to an Open Source project can be daunting at first glance, but if you have some know-how in both Python and Q, you have an opportunity to become a contributor in KX's PyKX library. In this post, we will give you a comprehensive guide on how to become one.
 
 ### Enter PyKX
 
 [PyKX](https://code.kx.com/pykx/2.4/index.html) is a library tailored towards Python users that aims to bring them closer to the KDB+/Q environment by enabling the use of Q from a Python environment and vice-versa. It also provides conversion between Python and Q types, making migrations from Python to Q as seamless as possible. We dedicated two articles that went into a lot more detail about this migration process [here](https://www.habla.dev/blog/2023/07/31/all-roads-lead-to-pykx.html) and [here](https://www.habla.dev/blog/2023/09/15/all-roads-lead-to-kdb-the-technical-counterpart). More specifically, we laid down a simple path that users should follow if they wished to perform a similar kind of migration.
 
-However, that's not the topic of today's blog post. As we have already established, PyKX is the perfect gateway into open source development for those with knowledge of both Python and Q, and in this article we will give you a step by step guide on how we  implemented a simple function and contributed to this fantastic library.
+However, that's not the topic of today's blog post. As we have already established, PyKX is the perfect gateway into open source development for those with knowledge of both Python and Q, and in this article we will give you a step by step guide on how we  implemented a simple function and contributed to this library.
 
-From our previous efforts with PyKX, we noticed that a few pandas API functions were in need of an implementation. This module aims to be a drop-in replacement of pandas syntax as, making migrations as trouble-free as possible. We stumbled upon it module when looking for ways to simplify our code and, since it allows for the use of pandas-like syntax, it was the perfect fit for our needs.
-
-An example of this pandas-like syntax could be the following:
+PyKX is composed of several different modules, but today we will focus on the pandas API since it's the module we have been contributing to up until this point. This API aims to be a drop-in replacement for pandas syntax, making migrations as trouble-free as possible. Take a look at this example:
 
 ```python
->df
-   Animal  Max Speed  Max Altitude
-0  Falcon      380.0         570.0
-1  Falcon      370.0         555.0
-2  Parrot       24.0         275.0
-3  Parrot       26.0         300.0
+> df
+   Person   Age  Single
+0    John  24.0   False
+1    Myla   NaN    True
+2   Lewis  21.0    True
+3    John  33.0    True
+4    Myla  26.0   False
 
->df.mean(numeric_only=True)
-Max Speed       200.0
-Max Altitude    425.0
-dtype: float64
+> df.mean(numeric_only=True)
+Age       26.0
 ```
 
-With PyKX, we could essentially perform the same computation with the same syntax:
+With PyKX, we could essentially perform the same computation with the exact same syntax:
 
 ```python
->import pykx as kx
->t = kx.toq(df)
->t
+> import pykx as kx
+> t = kx.toq(df)
+> t
 pykx.Table(pykx.q('
-	Animal Max Speed Max Altitude
-	-----------------------------
-	Falcon 380       570         
-	Falcon 370       555         
-	Parrot 24        275         
-	Parrot 26        300         
+	Person  Age Single
+	------------------
+	John   24.0      0
+	Myla             1         
+	Lewis  21.0      1
+	John   33.0      1
+	Myla   26.0      0
 '))
->t.mean(numeric_only=True)
+> t.mean(numeric_only=True)
 pykx.Dictionary(pykx.q('
-	Max Speed   | 200
-	Max Altitude| 425
+	Age   | 26.0
 '))
 ```
+
+We stumbled upon this API when looking for ways to simplify our PyKX code and, since it allows for the use of pandas-like syntax, it was the perfect fit for our needs back then. However we also noticed that a few functions were in need of an implementation.
 
 So, since this is an open source project, we decided to implement those missing functions ourselves!
 
@@ -63,7 +62,7 @@ So, since this is an open source project, we decided to implement those missing 
 
 The very first thing you should do after setting up your environment should be to fork [KxSystems/pykx](https://github.com/KxSystems/pykx) into your own repository where you have permissions to create branches and do some actual work.
 
-If you land on their [GitHub repository](https://github.com/KxSystems/pykx) like we did, chances are you will take a look at their README. This is a really nice introduction to what PyKX is and their goals with the library, but for this section we will focus on the [`Building from Source`](https://github.com/KxSystems/pykx?tab=readme-ov-file#building-from-source) section. Here, you should follow their instructions carefully. In our case, we decided to install on Linux, since it is our platform of choice for these kinds of projects, but Windows and OS X are viable options as well!
+If you land on their [GitHub repository](https://github.com/KxSystems/pykx) like we did, chances are you will take a look at their README. This is a really nice introduction to what PyKX is and their goals with the library, but right now we will focus on the [`Building from Source`](https://github.com/KxSystems/pykx?tab=readme-ov-file#building-from-source) section. Here, you should follow their instructions carefully. In our case, we decided to install on Linux, since it is our platform of choice for these kinds of projects, but Windows and OS X are viable options as well!
 
 Be sure to take a look at their `DEVELOPING.md` file for some development guidelines. This file contains the team's code styling preferences, so be sure to stick to them.
 
@@ -75,21 +74,11 @@ The quick step by step goes as follows:
 
 Be aware that the last step may take a few minutes depending on your hardware.
 
----
-
-_**Note**_:
-
-We also tried to use [Pip's Editable Builds](https://setuptools.pypa.io/en/latest/userguide/development_mode.html), but since this library relies on Cython for some parts, we were unsuccessful on trying to make it work. If this was available, time spent on builds would be drastically reduced.
-
----
-
 In order to be able to run some tests (which will be required for the contribution), you need to also run these commands (on Linux), as the documentation states:
 
 ```sh
 export PATH="$PATH:/location/of/your/q/l64" # q must be on PATH for tests
-```
 
-```sh
 export QHOME=/location/of/your/q #q needs QHOME available
 ```
 
@@ -136,25 +125,15 @@ With all of that done, we will focus on developing a simple function for the pan
 After taking a decision on the function we will be developing, since we are making a contribution to the pandas API, we should take a look at what that function actually does. In this particular case, [`count`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.count.html) returns a dictionary of sorts with the columns as the key and the count for each column as the value:
 
 ```python
-> df = pd.DataFrame({"Person":
-                   ["John", "Myla", "Lewis", "John", "Myla"],
-                   "Age": [24., np.nan, 21., 33, 26],
-                   "Single": [False, True, True, True, False]})
-> df
-```
-```
+>  df
    Person   Age  Single
 0    John  24.0   False
 1    Myla   NaN    True
 2   Lewis  21.0    True
 3    John  33.0    True
 4    Myla  26.0   False
-```
 
-```python
-> df.count()
-```
-```
+>  df.count()
 Person    5
 Age       4
 Single    5
@@ -162,6 +141,30 @@ dtype: int64
 ```
 
 The implementation should be easy on q: we can just `count` on each column and we should get the result we want!
+
+---
+
+_**Note**_
+
+Those of you proficient on pandas and Q may notice that `count each` doesn't do exactly the same as `df.count()` on pandas. The later doesn't count the null values whereas the Q version does.
+
+```q
+q)t
+a b
+---
+a 0
+b 1
+  2
+
+q)count each value flip t
+3 3
+```
+
+Sometimes, it isn't fully clear whether to follow the pandas' syntax and semantics or lean closer to its Q counterpart. For example, if you want to build a function that is one to one with pandas' interface, you may find yourself taking care of several edge cases. More often than not, this will make your function much longer and less maintainable in the future, so if you find yourself in that situation, our suggestion would be to try to keep it as simple as possible.
+
+In the case of `count` there weren't really all that many edge cases, so we decided to do a one to one recreation of the pandas equivalent's interface. Later on we'll see how we tackle the parity issue.
+
+---
 
 Now that the underlying Q code is clear, we can focus on bringing the functionality to PyKX. For that, we need to know _where_ to place our function and _how_ to make it available.
 
@@ -173,7 +176,7 @@ Well, all of them contain code for the pandas API, of course, but where we place
 
 In our case, since `count` is a general function, we can place it under `pandas_meta.py`, which contains a plethora of general purpose functions. Inside that file, try to write your implementation around similar functions so you can use them as reference.
 
- ## Getting familiar with the syntax
+## Getting familiar with the syntax
 
 As with any new environment you need to work on, it may take a while to get used to it. I would personally look around the different files and try to take mental notes (or regular notes, I won't judge you) on how the functions are implemented, which patterns repeat themselves, which don't, etc... 
 
@@ -192,7 +195,7 @@ def convert_result(func):
 
 We can see that:
 
- 1. Runs the "child" function (potentially, our implementation for `count`).
+ 1. Runs the "child" function `func` (potentially, our implementation for `count`).
  2. It builds a dictionary with the functions return values.
 
 So, since pandas' implementation of `count` seems to follow this pattern (returning a dictionary, that is), we can use this function to build the final result in the shape it must have. We can also see that we need to return a tuple containing the list of results and the column names, both following the same order.
@@ -209,7 +212,7 @@ The `@api_return` decorator is used when we want to return a table-shaped object
 
 ## Implementing the function
 
-Next up, I'm going to show you our accepted implementation of `count` and go line by line explaining what's going on. The code looks like this:
+Next up, let's take a look at our accepted implementation of `count` and go line by line explaining what's going on. The code looks like this:
 
 ```python
 @convert_result
@@ -218,26 +221,11 @@ def count(self, axis=0, numeric_only=False):
     return (q('count each', res), cols)
 ```
 
-As you can see, there are a few things going on but the implementation itself has a very small footprint. If we ignore the third line, we can see that we are indeed using the `@convert_result` decorator, so we need to return the dictionary values, which will be the count on each column and the keys which, in this case (and most), will be the column names.
+As you can see, there are a few things going on but the implementation itself has a very small footprint. We will come back to it later but, if we ignore the third line, we can see that we are indeed using the `@convert_result` decorator, so we need to return the dictionary values, which will be the count on each column and the keys which, in this case (and most), will be the column names.
 
-The second line is the function declaration and here we try to stick to [pandas' interface]() so that integration with existing codebases is as seamless as possible. In this case, we need to define the `axis` and `numeric_only` parameters, with their respective default values.
+The second line is the function declaration and here we try to stick to [pandas' interface](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.count.html) so that integration with existing codebases is as seamless as possible. In this case, we need to define the `axis` and `numeric_only` parameters, with their respective default values.
 
 On the last line of code we actually perform the counting on each of our columns' values. If you are familiar with PyKX, you most likely have used `pykx.q` to run Q code from Python, and this is exactly what is going on here. We are running `count each` on our `res` value.
-
-Those of you proficient on pandas and Q may notice that `count each` doesn't do exactly the same as `df.count()` on pandas. The later doesn't count the null values whereas the Q version does. This is intentional in this case, and up next we'll see how we take care of those edge values.
-
-```q
-q)t
-a b
----
-a 0
-b 1
-  2
-```
-```q
-q)count each value flip t
-3 3
-```
 
 But wait a minute, what does `res` contain? Well, that's a good question. In order to understand that, first we need to take a look at what `preparse_computation` does.
 
@@ -245,29 +233,57 @@ If you have ever worked with pandas, you might have noticed that many methods sh
 
  1. Gets the table's values and column names.
  2. Depending on the parameters, it transforms the column values according to them.
- 3. It returns a list containing the column values (so, a list of lists) and the column names.
+ 3. It returns a list containing the column values (so, a list of lists) and the column names as a tuple.
+
+To exemplify this function's interface, let's run it on the table we were working with to see what's being returned:
+
+```python
+> t
+pykx.Table(pykx.q('
+	Person  Age Single
+	------------------
+	John   24.0      0
+	Myla             1         
+	Lewis  21.0      1
+	John   33.0      1
+	Myla   26.0      0
+'))
+
+> preparse_computations(t, axis=0, skipna=True, numeric_only=False)
+(pykx.List(
+  pykx.q('
+    `John`Myla`Lewis`John`Myla
+    24 21 33 26f
+    01110b
+  ')),
+ pykx.SymbolVector(
+  pykx.q('`Person`Age`Single'))
+)
+```
+
+We can see that we are getting just what we expected, the exact values of the table with the null values being skipped (see the float list).
 
 With this in mind, we can now fully understand the implementation we wrote. In this case, the `preparse_computation` takes the `axis` and `numeric_only` values straight from the parameters and for the `skipna` value we pass a `True`, meaning that if we find a null value, it should be dropped. This last hardcoded parameter allows our `count` to behave exactly as the one found on the pandas library.
 
 Once that's been taken care of, build the library, open a REPL for a quick test to see if we have `count` available and that it behaves as expected on a simple example:
 
 ```python
->import pykx as kx
->t = kx.toq(df)
->t
+> import pykx as kx
+> t = kx.toq(df)
 pykx.Table(pykx.q('
-	 Animal Max Speed Max Altitude
-	 -----------------------------
-	 Falcon 380       570         
-	 Falcon 370       555         
-	 Parrot 24        275         
-	 Parrot 26        300         
+	Person  Age Single
+	------------------
+	John   24.0      0
+	Myla             1         
+	Lewis  21.0      1
+	John   33.0      1
+	Myla   26.0      0
 '))
->t.count()
+> t.count()
 pykx.Dictionary(pykx.q('
-    Animal       | 4
-    Max Speed    | 4
-    Max Altitude | 4
+    Person    | 5
+    Age       | 4
+    Single    | 5
 '))
 ```
 
@@ -281,8 +297,9 @@ Since we are mimicking functionality on the function we developed, our tests sho
 
  * Counting on a table with null values.
  * Counting on a table with non-numeric values.
+ * Counting on the two available axes.
 
-At this point, we could write some code on the test file and hope for the best, but I personally recommend installing Jupyter inside the venv for the project so that whenever we build our library, it becomes available from a Jupyter notebook where we can start building up our test cases. It may look a bit overkill, but for larger functions with many more moving parts (like functionality that needs to be adjusted as holes in the logic are located), the ability to quickly prototype your test cases could be crucial.
+At this point, we could write some code on the test file and hope for the best, but I personally recommend installing Jupyter inside the venv as mentioned before so that whenever we build our library, it becomes available on a notebook where we can quickly start prototyping our test cases. It may look a bit overkill, but for larger functions with much more complex logic the functionality may need to be adjusted as edge cases are located, and the ability to quickly prototype your test cases could be crucial.
 
 However you may choose to develop your tests, our input for this function could look something like this:
 
@@ -362,18 +379,13 @@ In the case of our `count` function, the documentation should be written on the 
 
 As with most open source projects, code additions should be handled through pull requests. If you are not familiar with pull requests, you can take a look at this [guide](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request) written by GitHub.
 
-Open an issue following its template located at `https://github.com/KxSystems/pykx/tree/main/.github/ISSUE_TEMPLATE` and then open a pull request, linking it with the issue and following the template located at `https://github.com/KxSystems/pykx/tree/main/.github/PULL_REQUEST_TEMPLATE`.
+Open an issue following its template located [here](https://github.com/KxSystems/pykx/tree/main/.github/ISSUE_TEMPLATE) and then open the pull request itself from your local branch to the upstream main branch, linking it with the issue and following the template located [here](https://github.com/KxSystems/pykx/tree/main/.github/PULL_REQUEST_TEMPLATE).
 
 ## Conclusions and general tips
 
-Hopefully we have encouraged you to make your own contribution to PyKX and help grow this fantastic library. Our team has been working on different contributions to the pandas API for the best part of the last few months. Here are some examples of functions that are currently available in PyKX as of writing that were developed by us:
+Hopefully we have encouraged you to make your own contribution to PyKX and help grow this fantastic library. Our team has been working on different contributions to the pandas API for the best part of the last few months. Some examples of functions that are currently available in PyKX as of writing that were developed by us are `add_prefix` and `add_suffix`, `skew`, `count`, `std`, etc.
 
- - `add_prefix` and `add_suffix`
- - `skew`
- - `count`
- - `std`
-
-There are a few more that at the moment are pending a review from the PyKX team. These can be found on the following issue: [KxSystems/pykx/issues/23](https://github.com/KxSystems/pykx/issues/23). We are still working on a third batch of functions, so keep an eye on those issues if you want to be up to date!
+We are still working on two more batches of functions, so keep an eye on those issues if you want to be up to date!
 
 Here are some examples of pandas API functions that could be interesting to implement if you are looking for a challenge:
 
