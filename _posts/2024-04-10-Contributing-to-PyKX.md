@@ -165,7 +165,7 @@ Now that the underlying functionality is clear, we can focus on bringing the fun
 
 PyKX's codebase is quite extensive, so we need to make sense of it. We can assume the source code is inside the `src` directory, and that the pandas API code should be inside the `pandas_api` subdirectory, but there are quite a few Python files inside so... Where do we put our implementation?
 
-![]({{ site.baseurl }}/assets/2024/03/18/dir-tree.png)
+![]({{ site.baseurl }}/assets/2024/04/10/dir-tree.png)
 
 Well, all of them contain code for the pandas API, of course, but where we place it is up to the "family" of functions it belongs to. Is it related to indexing? Then write your function inside `pandas_indexing.py`. Is it a special type of join? Then `pandas_merge.py` is most likely where you want to write it.
 
