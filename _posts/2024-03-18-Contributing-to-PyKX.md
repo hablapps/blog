@@ -10,13 +10,13 @@ toc: true
 
 ## Introduction
 
-Contributing to an Open Source project can be daunting at first glance, but if you have some know-how in both Python and Q, you have an opportunity to become a contributor in KX's PyKX library. In this post, we will give you a comprehensive guide on how to become one.
+Contributing to an Open Source project can be daunting at first glance, but if you have some know-how in both Python and q, you have an opportunity to become a contributor in KX's PyKX library. In this post, we will give you a comprehensive guide on how to become one.
 
 ### Enter PyKX
 
-[PyKX](https://code.kx.com/pykx/2.4/index.html){:target="_blank"} is a library tailored towards Python users that aims to bring them closer to the KDB+/Q environment by enabling the use of Q from a Python environment and vice-versa. It also provides conversion between Python and Q types, making migrations from Python to Q as seamless as possible. We dedicated two articles that went into a lot more detail about this migration process [here](https://www.habla.dev/blog/2023/07/31/all-roads-lead-to-pykx.html){:target="_blank"} and [here](https://www.habla.dev/blog/2023/09/15/all-roads-lead-to-kdb-the-technical-counterpart){:target="_blank"}. More specifically, we laid down a simple path that users might want to follow if they wished to perform a similar kind of migration.
+[PyKX](https://code.kx.com/pykx/2.4/index.html){:target="_blank"} is a library tailored towards Python users that aims to bring them closer to the kdb+/q environment by enabling the use of q from a Python environment and vice-versa. It also provides conversion between Python and q types, making migrations from Python to q as seamless as possible. We dedicated two articles that went into a lot more detail about this migration process [here](https://www.habla.dev/blog/2023/07/31/all-roads-lead-to-pykx.html){:target="_blank"} and [here](https://www.habla.dev/blog/2023/09/15/all-roads-lead-to-kdb-the-technical-counterpart){:target="_blank"}. More specifically, we laid down a simple path that users might want to follow if they wished to perform a similar kind of migration.
 
-However, that's not the topic of today's blog post. As we have already established, PyKX is the perfect gateway into open source development for those with knowledge of both Python and Q, and in this article we will give you a step by step guide on how we  implemented a simple function and contributed to this library.
+However, that's not the topic of today's blog post. As we have already established, PyKX is the perfect gateway into open source development for those with knowledge of both Python and q, and in this article we will give you a step by step guide on how we  implemented a simple function and contributed to this library.
 
 PyKX is composed of several different modules, but today we will focus on the pandas API since it's the module we have been contributing to up until this point. This API aims to be a drop-in replacement for pandas syntax, making migrations as trouble-free as possible. Take a look at this example:
 
@@ -91,8 +91,8 @@ Since this is completely optional at this point, feel free to skip it. Later on 
 ### Useful tools
 
 * As for the IDE / text editor, use your Python editor of choice.
-* Inside your venv, be sure to have Jupyter installed to have quick access to your function after the build is completed. This is particularly useful when developing tests. A [Q kernel for Jupyter](https://github.com/KxSystems/jupyterq){:target="_blank"} may also be handy when debugging your Q code. As an alternative, a [VSCode plugin](https://marketplace.visualstudio.com/items?itemName=KX.kdb&ssr=false#overview){:target="_blank"} that makes you able to run Q code also exists.
-    
+* Inside your venv, be sure to have Jupyter installed to have quick access to your function after the build is completed. This is particularly useful when developing tests. A [q kernel for Jupyter](https://github.com/KxSystems/jupyterq){:target="_blank"} may also be handy when debugging your q code. As an alternative, a [VSCode plugin](https://marketplace.visualstudio.com/items?itemName=KX.kdb&ssr=false#overview){:target="_blank"} that makes you able to run q code also exists.
+
 ---
 
 _**Note**_:
@@ -141,7 +141,7 @@ The implementation should be easy on q: we can just `count` on each column and w
 
 _**Note**_
 
-Those of you proficient on pandas and Q may notice that `count each` doesn't do exactly the same as `df.count()` on pandas. The later doesn't count the null values whereas the Q version does.
+Those of you proficient on pandas and q may notice that `count each` doesn't do exactly the same as `df.count()` on pandas. The later doesn't count the null values whereas the q version does.
 
 ```q
 q)t
@@ -155,13 +155,13 @@ q)count each value flip t
 3 3
 ```
 
-Sometimes, it isn't fully clear whether to follow the pandas' syntax and semantics or lean closer to its Q counterpart. For example, if you want to build a function that is one to one with pandas' interface, you may find yourself taking care of several edge cases. More often than not, this will make your function much longer and less maintainable in the future, so if you find yourself in that situation, our suggestion would be to try to keep it as simple as possible.
+Sometimes, it isn't fully clear whether to follow the pandas' syntax and semantics or lean closer to its q counterpart. For example, if you want to build a function that is one to one with pandas' interface, you may find yourself taking care of several edge cases. More often than not, this will make your function much longer and less maintainable in the future, so if you find yourself in that situation, our suggestion would be to try to keep it as simple as possible or ask the PyKX team directly via their [support page](https://code.kx.com/pykx/2.4/support.html){:target="_blank"}. 
 
 In the case of `count` there weren't really all that many edge cases, so we decided to do a one to one recreation of the pandas equivalent's interface. Later on we'll see how we tackle the parity issue.
 
 ---
 
-Now that the underlying Q code is clear, we can focus on bringing the functionality to PyKX. For that, we need to know _where_ to place our function and _how_ to make it available.
+Now that the underlying functionality is clear, we can focus on bringing the functionality to PyKX. For that, we need to know _where_ to place our function and _how_ to make it available.
 
 PyKX's codebase is quite extensive, so we need to make sense of it. We can assume the source code is inside the `src` directory, and that the pandas API code should be inside the `pandas_api` subdirectory, but there are quite a few Python files inside so... Where do we put our implementation?
 
@@ -220,7 +220,7 @@ As you can see, there are a few things going on but the implementation itself ha
 
 The second line is the function declaration and here we try to stick to [pandas' interface](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.count.html){:target="_blank"} so that integration with existing codebases is as seamless as possible. In this case, we need to define the `axis` and `numeric_only` parameters, with their respective default values.
 
-On the last line of code we actually perform the counting on each of our columns' values. If you are familiar with PyKX, you most likely have used `pykx.q` to run Q code from Python, and this is exactly what is going on here. We are running `count each` on our `res` value.
+On the last line of code we actually perform the counting on each of our columns' values. If you are familiar with PyKX, you most likely have used `pykx.q` to run q code from Python, and this is exactly what is going on here. We are running `count each` on our `res` value.
 
 But wait a minute, what does `res` contain? Well, that's a good question. In order to understand that, first we need to take a look at what `preparse_computation` does.
 
@@ -317,7 +317,7 @@ assert int(qcount["k1"]) == int(pcount["k1"])
 assert int(qcount["k2"]) == 3
 ```
 
-First off we want to run `count` on both the PyKX table and the pandas DataFrame and since the result of our `count` function is a Q dictionary, we can use `.py()` to convert it to a Python one and then perform the actual assertions after that.
+First off we want to run `count` on both the PyKX table and the pandas DataFrame and since the result of our `count` function is a q dictionary, we can use `.py()` to convert it to a Python one and then perform the actual assertions after that.
 
 After this set of assertions, we should test our `count` function with different parameters:
 
@@ -382,16 +382,17 @@ Hopefully we have encouraged you to make your own contribution to PyKX and help 
 * Try to blend your code as much as possible with the existing codebase.
 * Follow their programming philosophy as stated on the `DEVELOPING.md` file.
 * Write thorough tests. They can help you identify "holes" in your logic.
+* Reach out to the PyKX team if you have technical questions via their [support page](https://code.kx.com/pykx/2.4/support.html){:target="_blank"}.
 * Try to learn as much as possible in the process!
 
-We are still working on two more batches of functions, so keep an eye on those issues if you want to be up to date!
+We are still working on two more batches of functions, so keep an eye on those [issues](https://github.com/KxSystems/pykx/issues){:target="_blank"} if you want to be up to date!
 
 If you are looking for a challenge, here are some examples of pandas API functions that could be interesting to implement:
 
 - [`melt`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.melt.html){:target="_blank"}
 - [`rolling`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.rolling.html){:target="_blank"}
 - [`clip`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.clip.html){:target="_blank"}
-  
+
 But there is more to the library than the pandas API! There are plenty more things that could prove interesting to explore like how `toq` works (more info in the `pykx/src/cast.py` file), database management (currently beta, use with the `pykx.db` module), etc. Happy open-source coding!
 
 ---
