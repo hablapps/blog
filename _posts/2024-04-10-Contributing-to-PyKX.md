@@ -397,7 +397,7 @@ But there is more to the library than the pandas API! There are plenty more thin
 
 ## Acknowledgments
 
-All errors in this post are our own, but we are extremely grateful to Connor McCarthy and the friendly PyKX Team for taking the time to meet with us on several occasions and guide us through the process of contributing to PyKX.
+All errors in this post are our own, but we are extremely grateful to Conor McCarthy and the friendly PyKX Team for taking the time to meet with us on several occasions and guide us through the process of contributing to PyKX.
 
 ## Connect with us!
 
