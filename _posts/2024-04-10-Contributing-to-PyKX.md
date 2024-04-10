@@ -18,7 +18,7 @@ Contributing to an Open Source project can be daunting at first glance, but if y
 
 However, that's not the topic of today's blog post. As we have already established, PyKX is the perfect gateway into open source development for those with knowledge of both Python and q, and in this article we will give you a step by step guide on how we  implemented a simple function and contributed to this library.
 
-PyKX is composed of several different modules, but today we will focus on the pandas API since it's the module we have been contributing to up until this point. This API aims to be a drop-in replacement for pandas syntax, making migrations as trouble-free as possible. Take a look at this example:
+PyKX is composed of several different modules, but today we will focus on the pandas API since it's the module we have been contributing to up until this point. This API aims to be a drop-in replacement for pandas syntax, making migrations as trouble-free as possible. Consider the following example, assuming `df` represents a Pandas DataFrame:
 
 ```python
 > df
@@ -54,7 +54,7 @@ pykx.Dictionary(pykx.q('
 '))
 ```
 
-We stumbled upon this API when looking for ways to make our code more "Pythonic" our PyKX code and, since it allows for the use of pandas-like syntax, it was the perfect fit for our needs back then. However we also noticed that a few functions were in need of an implementation. So, since this is an open source project, we decided to implement those missing functions ourselves!
+We stumbled upon this API when looking for ways to make our PyKX code more "Pythonic" and, since it allows for the use of pandas-like syntax, it was the perfect fit for our needs back then. However we also noticed that a few functions were in need of an implementation. So, since this is an open source project, we decided to implement those missing functions ourselves!
 
 ### Setting up the development environment
 
@@ -155,7 +155,7 @@ q)count each value flip t
 3 3
 ```
 
-Sometimes, it isn't fully clear whether to follow the pandas' syntax and semantics or lean closer to its q counterpart. For example, if you want to build a function that is one to one with pandas' interface, you may find yourself taking care of several edge cases. More often than not, this will make your function much longer and less maintainable in the future, so if you find yourself in that situation, our suggestion would be to try to keep it as simple as possible or ask the PyKX team directly via their [support page](https://code.kx.com/pykx/2.4/support.html){:target="_blank"}. 
+Sometimes, it isn't fully clear whether to follow the pandas' syntax and semantics or lean closer to its q counterpart. For example, if you want to build a function that is one to one with pandas' interface, you may find yourself taking care of several edge cases. More often than not, this will make your function much longer and less maintainable in the future, so if you find yourself in that situation, our suggestion would be to try to keep it as simple as possible, or even better, ask the PyKX team directly via their [support page](https://code.kx.com/pykx/2.4/support.html){:target="_blank"}.
 
 In the case of `count` there weren't really all that many edge cases, so we decided to do a one to one recreation of the pandas equivalent's interface. Later on we'll see how we tackle the parity issue.
 
@@ -394,6 +394,18 @@ If you are looking for a challenge, here are some examples of pandas API functio
 - [`clip`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.clip.html){:target="_blank"}
 
 But there is more to the library than the pandas API! There are plenty more things that could prove interesting to explore like how `toq` works (more info in the `pykx/src/cast.py` file), database management (currently beta, use with the `pykx.db` module), etc. Happy open-source coding!
+
+## Acknowledgments
+
+All errors in this post are our own, but we are extremely grateful to Connor McCarthy and the friendly PyKX Team for taking the time to meet with us on several occasions and guide us through the process of contributing to PyKX.
+
+## Connect with us!
+
+We are [Habla Computing](https://hablapps.com/), a small company based in Madrid with [a bunch of passionate Functional Programmers and Data Engineers](https://hablapps.com/team/) specializing in Scala, Spark and kdb+/q.
+
+We've just launched a new meetup series featuring hybrid events (in-person + streaming) focused on kdb+/q. Join us at _Everything Everywhere All with kdb/q_, you can [register here!](https://www.meetup.com/everything-everywhere-all-with-kdb-q/).
+
+Interested in leveraging our expertise? Whether it's Scala, Spark, kdb+/q, or any of our other services, [contact us directly](https://hablapps.com/contact/) or [connect via LinkedIn](https://www.linkedin.com/company/habla-computing/). We'd love to hear from you!
 
 ---
 
