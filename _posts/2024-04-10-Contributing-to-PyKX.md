@@ -401,11 +401,11 @@ All errors in this post are our own, but we are extremely grateful to Connor McC
 
 ## Connect with us!
 
-We are [Habla Computing](https://hablapps.com/), a small company based in Madrid with [a bunch of passionate Functional Programmers and Data Engineers](https://hablapps.com/team/) specializing in Scala, Spark and kdb+/q.
+We are [Habla Computing](https://hablapps.com/){:target="_blank"}, a small company based in Madrid with [a bunch of passionate Functional Programmers and Data Engineers](https://hablapps.com/team/){:target="_blank"} specializing in Scala, Spark and kdb+/q.
 
-We've just launched a new meetup series featuring hybrid events (in-person + streaming) focused on kdb+/q. Join us at _Everything Everywhere All with kdb/q_, you can [register here!](https://www.meetup.com/everything-everywhere-all-with-kdb-q/).
+We've just launched a new meetup series featuring hybrid events (in-person + streaming) focused on kdb+/q. Join us at _Everything Everywhere All with kdb/q_, you can [register here!](https://www.meetup.com/everything-everywhere-all-with-kdb-q/){:target="_blank"}.
 
-Interested in leveraging our expertise? Whether it's Scala, Spark, kdb+/q, or any of our other services, [contact us directly](https://hablapps.com/contact/) or [connect via LinkedIn](https://www.linkedin.com/company/habla-computing/). We'd love to hear from you!
+Interested in leveraging our expertise? Whether it's Scala, Spark, kdb+/q, or any of our other services, [contact us directly](https://hablapps.com/contact/){:target="_blank"} or [connect via LinkedIn](https://www.linkedin.com/company/habla-computing/){:target="_blank"}. We'd love to hear from you!
 
 ---
 
