@@ -5,11 +5,8 @@ layout: default
 <div class="content">
     {{ content }}
 </div>
-<div class="content">
-    Habla computing team
-</div>
 <div class="columns is-multiline">
-    {% assign sortedautors = site.authors | where_exp:"auth", "auth.active == true" | sort: "start_date" %}
+    {% assign sortedautors = site.authors | where_exp:"auth", "auth.active == true" | sort: "start_date" %}
     {% for author in sortedautors %}
         <div class="column is-12">
             {% include author-media.html %}
@@ -20,7 +17,7 @@ layout: default
     Guest writers in the blog
 </div>
 <div class="columns is-multiline">
-    {% assign guests = site.authors | where_exp:"auth", "auth.active == nil" | sort: "start_date" %}
+    {% assign guests = site.authors | where_exp:"auth", "auth.active == nil" | sort: "start_date" %}
     {% for author in guests %}
         <div class="column is-12">
             {% include author-media.html %}

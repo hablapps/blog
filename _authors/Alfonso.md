@@ -3,8 +3,8 @@
   email: alfonso.roa@habla.dev
   display_name: Alfonso Roa
   name: Alfonso Roa
-  position: Senior software developer
-  avatar: /img/team/alfonso.jpg
+  position: VP of Engineering
+  avatar: /img/team/alfonso1.jpg
   twitter: https://twitter.com/saco_pepe
   linkedin: https://www.linkedin.com/in/roaalfonso/
   github: https://github.com/alfonsorr

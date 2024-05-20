@@ -1,10 +1,9 @@
---
-
+---
   email: juanmanuel.serrano@habla.dev
   display_name: Juan Manuel
   name: Juan Manuel Serrano
   position: CEO & Co-founder
-  avatar: /img/team/juanma.png
+  avatar: /img/team/juanma.jpg
   twitter: https://twitter.com/juanshac
   linkedin: https://es.linkedin.com/in/jserranohidalgo
   github: https://github.com/jserranohidalgo

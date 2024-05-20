@@ -1,5 +1,5 @@
 remote_theme: chrisrhymes/mere-blog-theme
-title: Habla computing Blog
+title: Habla Computing's Blog
 tagline: Purely Functional
 url: "https://www.hablapps.com"
 
@@ -25,7 +25,7 @@ defaults:
     values:
       author: "Juan Manuel Serrano"
       layout: post
-      image: /img/default-post.svg
+      image: /img/default-post.jpg
       show_sidebar: true
   -
     scope:
