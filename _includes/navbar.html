@@ -1,0 +1,22 @@
+<div class="navbar is-white">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="{{ site.baseurl }}/">
+              <img src="/img/logo-blog-habla.png">
+            </a>
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div class="navbar-menu" id="navMenu">
+            <div class="navbar-end">
+              <a class="navbar-item" href="https://hablapps.com">Website</a>
+                {% if site.authors %}
+                <a class="navbar-item" href="{{ site.baseurl }}/authors/">Authors</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

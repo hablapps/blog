@@ -2,7 +2,7 @@
 layout: post
 title: "Contributing to PyKX"
 author: Oscar Nydza Nicpoñ
-image: /img/glass-and-checkerboard.jpg
+image: /img/dalle-puzzle.webp
 toc: true
 ---
 
@@ -407,6 +407,3 @@ We've just launched a new meetup series featuring hybrid events (in-person + str
 
 Interested in leveraging our expertise? Whether it's Scala, Spark, kdb+/q, or any of our other services, [contact us directly](https://hablapps.com/contact/){:target="_blank"} or [connect via LinkedIn](https://www.linkedin.com/company/habla-computing/){:target="_blank"}. We'd love to hear from you!
 
----
-
-Post image: Glass and Checkerboard, Juan Gris, 1917

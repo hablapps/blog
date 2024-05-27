@@ -3,7 +3,7 @@ layout: post
 title: "Q: The Tool of Functional Thought"
 author: Jesús López-González
 intro: "Preface"
-image: /img/momento-de-transicion.jpg
+image: /img/dalle-brain.webp
 intro_image_ratio: is-16by9
 toc: true
 ---
@@ -58,6 +58,4 @@ to master q/kdb, we are confident that we have now a good perspective on how
 hard it is to learn this language. In fact, reflecting this experience is
 perhaps the major contribution of this series of posts. Having said so, [we're
 ready to go now!](https://www.hablapps.com/blog/2021/04/19/q-as-an-impure-functional-language.html)
-
-*Post Picture: Momento de Transición, Salvador Dalí (1934)*
 

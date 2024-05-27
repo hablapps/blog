@@ -3,7 +3,7 @@ layout: post
 title: "Q: The Tool of Functional Thought. Part I"
 author: Jesús López-González
 intro: "Q as an (Impure) Functional Language"
-image: /img/trilogia-espejismo.jpg
+image: /img/dalle-brain.webp
 intro_image_ratio: is-16by9
 toc: true
 ---
@@ -558,5 +558,3 @@ Before concluding, we must warn you that this post is far from reflecting the
 real power of q. You should wait to our next post on array processing to see it!
 It takes a while to experience the Zen, but you'll get a really powerful *tool
 of thought* as a reward.
-
-*Post Picture: Trilogía del desierto. Espejismo, Salvador Dalí (1946)*
