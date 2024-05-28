@@ -2,7 +2,7 @@
 layout: post
 title: "Kx Insights Enterprise: data analytics made simple"
 author: Cristian Pérez Corral, Christian Aberturas López
-image: /img/butterfly-ship.jpg
+image: /img/dalle-insights.webp
 toc: true
 ---
 

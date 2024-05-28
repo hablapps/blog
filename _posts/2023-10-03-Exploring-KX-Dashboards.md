@@ -2,7 +2,7 @@
 layout: post
 title: "Exploring KX Dashboards"
 author: Oscar Nydza Nicpoñ
-image: /img/ceil-et-levres.jpg
+image: /img/dalle-dashboards.webp
 toc: true
 ---
 
@@ -91,7 +91,7 @@ Great! Exactly what he wanted. Now it was time to present this dashboard to Emma
 
 After meeting with Emma, Félix had some remaining tasks to complete. Emma praised the dashboard, mentioning that it looked fantastic, but she also had a few suggestions. Primarily, she wanted the user to have the ability to switch the information displayed on the heatmap. Additionally, she requested that the current datetime be shown as text on the heatmap. Lastly, she wanted a line graph to be plotted, comparing the average traffic data of the displayed day to the average weather measurement shown on the heatmap.
 
-Félix started from what looked to be the easiest one of the tasks: showing the currently displayed datetime on screen. He dug into the documentation and found out there is a Text component that allows for custom text to be shown, so he dragged it on the grid to test it out and sure enough, the text he entered on the pop up that appeared after clicking "Formatted Text" was shown on the component, but he needed to show a value he had stored on a View State. After a short while, he found the "Template Text" pop up window, which conveniently showed the View States and after clicking on one of them, it placed itself on the text box, but it wasn't actually showing on the component. It was empty! It took Félix a while to find this out, but for any template text to be shown, there **must** be a data source linked, even if it's not used at all. In the end, the text he inputted to the template editor was `DateTime: {{[$DateTime$]}}` and he saw exactly what he expected:
+Félix started from what looked to be the easiest one of the tasks: showing the currently displayed datetime on screen. He dug into the documentation and found out there is a Text component that allows for custom text to be shown, so he dragged it on the grid to test it out and sure enough, the text he entered on the pop up that appeared after clicking "Formatted Text" was shown on the component, but he needed to show a value he had stored on a View State. After a short while, he found the "Template Text" pop up window, which conveniently showed the View States and after clicking on one of them, it placed itself on the text box, but it wasn't actually showing on the component. It was empty! It took Félix a while to find this out, but for any template text to be shown, there **must** be a data source linked, even if it's not used at all. In the end, the text he inputted to the template editor was `DateTime: { {[$DateTime$]} }` and he saw exactly what he expected:
 
 ![]({{ site.baseurl }}/assets/2023/10/03/11-dt-template-text.png)
 
@@ -152,5 +152,3 @@ Once those two key concepts were fully understood, the experience of using the p
 We also found [KX's blog posts on Dashboards](https://kx.com/search/?search_value=dashboards) to be incredibly useful, especially the ones describing the whole process of building a dashboard from scratch. In particular, [Visualizing Cycles Using KX Dashboards](https://kx.com/blog/visualizing-cycles-using-kx-dashboards/) allowed us to understand the playback component in depth and enabled us to take our dashboard to the next level.
 
 For future projects, we see a couple of routes that seem particularly interesting: custom components and real-time data. Specifically, we wish for the ability to "link" multiple components together, assigning them all a single shared View State and being able to add more layers to our traffic heatmap. These could most likely be achieved by creating custom components. Regarding real-time data and streaming data sources, we see a perfect match to visualize and gain insights into them using KX Dashboards facilities. Stay tuned for more updates and exciting developments ahead!
-
-*Post Picture: Ceil et Levres, Salvador Dalí*

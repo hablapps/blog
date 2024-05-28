@@ -2,7 +2,7 @@
 layout: post
 title: "All roads lead to PyKX"
 author: Jesús López-González
-image: /img/destino.jpg
+image: /img/dalle-road1.webp
 toc: true
 ---
 
@@ -217,4 +217,3 @@ This post was greatly enhanced thanks to the edits and comments from Steve Wilco
 
 This post is dedicated to Eloy and the three newborns at Habla: Emma, Félix, and Jesús.
 
-*Post Picture: Project for "Destino", Salvador Dalí (1946)*
