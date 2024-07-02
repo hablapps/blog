@@ -6,11 +6,11 @@ image: /img/dalle-puzzle.webp
 toc: true
 ---
 
-
 Kdb+/q stands out as **a powerful tool in finance**, renowned for its ability to handle vast volumes of real-time data amidst the relentless dynamics of the market. In this article, we embark on an insightful exploration of [_Pairs Trading_](https://en.wikipedia.org/wiki/Pairs_trade), one of the most popular strategies in the trading world, and its implementation in q. Our primary goal is to demonstrate how straightforward it is to create a simple real-time implementation of this strategy in just 25 lines of code. We accomplish this by leveraging the language's conciseness and expressiveness, along with reusing typical patterns and tools from the kdb ecosystems.
 
 In order to achieve this, we have outlined the following steps, corresponding to the main sections of this article:
-* Identifying related indexes
+
+* Identifying related (cointegrated) indexes
 * Implementing a model to calculate their spreads
 * Visualizing the approach in real-time
 
@@ -41,15 +41,12 @@ To develop the pairs trading strategy, we have integrated several new components
 
 ## Identifying cointegrated indexes
 
-The pairs trading strategy relies heavily on identifying pairs of assets that maintain a long-term equilibrium relationship as mentioned previously.
-
-Is this described mathematically? **Yes**:
-
-The concept we're referring to is **cointegration** (although there are other methods, we'll focus on this one).
+The pairs trading strategy relies heavily on identifying pairs of assets that maintain a long-term equilibrium relationship as mentioned previously. A common approach to deal with this is through the concept of **cointegration** (although there are other methods, we'll focus on this one).
 
 > 💡 Which should not be confused with correlation; cointegration is a statistical property of two-time series, indicating a long-term relationship between them despite short-term fluctuations. Cointegrated series move together over time, sharing a common stochastic drift. On the other hand, correlation measures the strength and direction of the linear relationship between two variables at a specific point in time. While correlation captures the degree of association between variables, cointegration reflects a deeper, underlying relationship that persists over time.
 
 Hence, we're interested in **cointegrated assets**, which are assets that exhibit the following characteristics:
+
 * They have a similar trend, meaning the difference between both assets maintains a constant mean, and this difference fluctuates around that same mean.
 * This inherent relationship remains constant in the long run, indicating that the connection between the series is time-invariant.
 
@@ -58,21 +55,26 @@ Let's shift our focus to the MS component, which has several responsibilities. I
 ![]({{ site.baseurl }}/assets/2024/07/02/general-architecture-ms.png)
 
 If our objective is to analyze potential pairs for the strategy using index data and their corresponding prices, querying the HDB for this information is a sensible approach. Assuming the HDB maintains a _stock_ table with the closing prices of each index for every date, we can employ the following query to retrieve all closing prices from the last `x` days:
+
 ```q
 rs:{select close by sym from stock where date within(.z.d-x;.z.d)}
 ```
+
 As you can see, the query resembles SQL: _select closing price by symbol from the stock table where the date is in the range between x days ago and today_. Indeed, we are taking advantage of the q-SQL syntactic facilities, which enable newcomers to be productive quickly, as evidenced by the [KX Academy](https://learninghub.kx.com/courses/kdb-developer-level-1/). It is worth mentioning that the query is enclosed in curly brackets, indicating that it is actually a function taking `x` as a parameter. The function is named `rs` to signify that it (r)eads (s)tocks.
 
 > 💡 Using short names for variables is a standard convention that, once you get used to it, improves readability.
 
 Now that we have defined a query, we need to execute it on the HDB component. To do so, we use [interprocess communication](https://code.kx.com/q/basics/ipc/) (IPC) to send the query:
+
 ```q
 hdb:`$":",.z.x 0
 cls:hdb(rs;2*365)
 ```
+
 In the first line, we read the initial command line argument (`.z.x`) which should specify the port number where the HDB is expected to be running. This argument is used to construct the process handle, for instance `::5010`, which references localhost at the specified port.
 
 Following this, we provide the `rs` query along with its parameter to define the range (specifically, two years ago from the current date). These are then transmitted to the HDB using IPC, and the result produced by the HDB is assigned to the variable `cls`, that we show here:
+
 ```
 sym      | close                                                             ..
 ---------| ------------------------------------------------------------------..
@@ -91,10 +93,12 @@ STOXX    | 416.19   413.42   407.2    400.68   407.34   415.01   417.12   415..
 > 💡 This approach exemplifies a good practice in kdb+: _keeping computations as close to the data as possible_. Instead of requesting data and then applying a filter or transformation to it, we send the computation to the HDB itself so we avoid transmitting unnecessary data over the communication.
 
 Once we have collected the prices, it is useful to identify all possible pairs:
+
 ```q
 syms:exec sym from cls
 ps:sx where (<).' sx:syms cross syms
 ```
+
 The first line extracts the sym column from the table. The second line generates their Cartesian product (`cross`) and filters out duplicate and inverse pairs by selecting only those pairs `where` the first element is alphabetically less than the second, ensuring each combination is unique. We are now ready to start analysing the cointegration of our pairs.
 
 To assess the level of cointegration between our chosen pair of assets, we'll employ a statistical test. This test will help us quantify the strength of the long-term equilibrium relationship we're looking for in our pairs trading strategy. The cointegration test is a **hypothesis test**, where we use our data to evaluate a specific hypothesis. In this case, our null hypothesis is that the two time series are not cointegrated. To interpret the results of this test, we'll be focusing on **p-values**.
@@ -102,14 +106,19 @@ To assess the level of cointegration between our chosen pair of assets, we'll em
 P-values help us decide whether to reject the null hypothesis. If the p-value is low, it suggests that we can reject the hypothesis of no cointegration, indicating that our assets are likely cointegrated. The lower the p-value, the stronger the evidence for cointegration. Conventionally, a threshold of 0.05 is often used for the p-value to reject the null hypothesis.
 
 For the sake of simplicity, we will be using [PyKX](https://code.kx.com/pykx/2.4/index.html). This is necessary as we require importing our cointegration test function and plotting a heatmap of our results. Developing these functionalities directly in q would be time-consuming and prone to errors. Although an implementation of the cointegration test in kdb+/q would be more efficient and faster, the effort required would outweigh the benefits for this particular case where performance isn't critical. Therefore, we rely on PyKX to streamline the process by leveraging relevant libraries from the Python ecosystem.
+
 ```q
 system"l pykx.q"
 ```
-One such library is **statsmodels**, a prominent tool in Python for statistical modeling and hypothesis testing. It equips analysts with a robust toolkit for regression, time series, and multivariate analysis. Specifically, within the statsmodels package, the _statsmodels.tsa.stattools_ module features the Cointegration test.
+
+One such library is **statsmodels**, a prominent tool in Python for statistical modeling and hypothesis testing. It equips analysts with a robust toolkit for regression, time series, and multivariate analysis. Specifically, within the statsmodels package, the _coint_ function from the _tsa.stattools_ module implements the Engle-Granger two-step cointegration test.
+
 ```q
 co:.pykx.import[`statsmodels.tsa.stattools]`:coint
 ```
+
 We can proceed to create a function called `cof` to call our imported function from PyKX and return the second element from the resulting list, which in this case is the p-value, [as described in the official documentation](https://www.statsmodels.org/stable/generated/statsmodels.tsa.stattools.coint.html).
+
 ```q
 cof:@[;1]co[<]::
 ```
@@ -117,12 +126,15 @@ cof:@[;1]co[<]::
 > 💡 This function definition doesn't explicitly reference its arguments, thanks to the way kdb+/q enables us to compose functions. This programming style, where function arguments are not named explicitly, is known as tacit programming or point-free style. In kdb+/q, tacit programming is especially powerful and concise, allowing us to create expressive and efficient code. By leveraging the language's capabilities for function composition and implicit argument passing, we can achieve elegant solutions like the one demonstrated.
 
 Next, we will get the prices involved in each pair and use the function above to produce the desired p-values:
+
 ```q
 pv:cof .'({x`close}')cls([]sym:ps)
 ```
+
 The implementation details are not as important as illustrating the concision and terseness achieved when developing code in q.
 
 Now, with our p-values in hand, let's show another example of the virtues of PyKX by plotting a heatmap, using the _seaborn_ library:
+
 ```q
 pyhm:.pykx.import[`seaborn]`:heatmap
 mx:flip("f"$1,'not null reverse m),'m:(0,sums[reverse 1_til count[syms]])_ pv
@@ -130,11 +142,12 @@ pyhm[mx;`xticklabels pykw syms;`yticklabels pykw syms;`cmap pykw `RdYlGn_r]
 pysh:.pykx.import[`matplotlib.pyplot]`:show
 pysh[::]
 ```
+
 After importing the library utility and arranging the p-values into a matrix `mx` (filled with dummy values in the top right) we produce the heatmap and show it:
 
 ![]({{ site.baseurl }}/assets/2024/07/02/heatmap.png)
 
-We will draw our attention to the synergy between _FCHI_ and _GDAXI_. They exhibit a vibrant green color, indicative of a high degree of cointegration, or, in simpler terms, a very low probability of not being related. They demonstrate the lowest p-value, suggesting their strength as candidates. The next graph consolidates this intuition:
+It draws our attention the relationship between _FCHI_ and _GDAXI_. They exhibit a vibrant green color, indicative of a high degree of cointegration, or, in simpler terms, a very low probability of not being related. Indeed, this cointegration makes sense since these indexes refer to the most representative stock markets in Europe: the French (FCHI) and the German (GDAXI) ones. They manifest the lowest p-value, suggesting their strength as candidates. The next graph consolidates this intuition:
 
 ![]({{ site.baseurl }}/assets/2024/07/02/cointegration.png)
 
@@ -176,7 +189,7 @@ q)spreads: log[price_y] - log price_x
 1.526056 1.098612 1.272966 2.014903 1.475907
 ```
 
-As we progress in our analysis, we're now seeing **numbers fluctuate within much smaller ranges**, thanks to our logarithmic normalization. However, to fully capitalize on the relationship between our assets, we need to align their discrepancies. This is where **linear regression** becomes a powerful tool in our algorithmic trading arsenal. By applying linear regression, we can find the optimal parameters α (alpha) and β (beta) that minimize the variance of the spread between our assets. This reduced variance is a crucial property for an algorithmic trading strategy, as it indicates a more stable and predictable relationship between the assets. The generic formula for our linear regression is:
+Once we have transformed the data using logarithms, we use **linear regression** to estimate the statistical model that relates the two variables. By applying linear regression, we can find the optimal parameters α (alpha) and β (beta) that minimize the variance of the spread between our assets. The generic formula for our linear regression is:
 
 $$Y = \alpha + \beta X + \varepsilon$$
 
@@ -240,27 +253,35 @@ Now that we have selected a pair of cointegrated indexes and built a model to ca
 ![]({{ site.baseurl }}/assets/2024/07/02/general-architecture-rpt.png)
 
 The first step in implementing this component is to retrieve the most cointegrated pair and its associated model. As we did before, we use IPC to communicate with the MS component:
+
 ```q
 (ix;sp):ms({enlist[ix],sm ix:ps pv?min pv};::)
 ```
+
 Here, we assume that `ms` points to the MS component (similar to how `hdb` was used in a previous section), and we send a query for MS to execute. It calculates the most cointegrated pair by finding the minimum p-value, identifying its position, and using it to find the names of the indexes. Finally, it executes the `sm` function obtained from the previous section to get the spread model for the most cointegrated pair. As a result, we get both the pair of indexes (`ix`) and the spread model (`sp`).
 
 Real-time components can manifest their interest in a particular table and a subset of symbols. Naturally, we are only interested in getting quotes associated with one of the indexes in our `ix` pair:
+
 ```q
 tp"(.u.sub[`quote;",(.Q.s1 ix),"])"
 ```
+
 As usual, we assume that `tp` is a pointer to the TP process. Essentially, `.u.sub` registers the RPT handle in the TP so it can later notify the recently subscribed component about new events. It assumes that the subscriber has defined an `upd` function as a kind of callback:
+
 ```q
 d:ix!2#0f
 upd:{d^:exec sym!log(ask+bid)%2 from select by sym from y}
 ```
+
 Our `upd` function takes ticks as input (`y`), selects the most recent one for each symbol, calculates their mid price, and updates the values (if any) in a simple dictionary `d`. This dictionary acts as a cache, which becomes essential in the following and final step.
 
 Now we need to notify the KX Dashboard about the spreads. The dashboard subscribes to the RPT using the same interface that the RPT uses to subscribe to the TP (.u.sub). However, in this case, the dashboard makes this task automatic and transparent to the user by invoking this function once a dashboard element has selected the `spread` table from the RPT process as its data source. With this setup, we can publish events to our subscribers using `.u.pub`:
+
 ```q
 .z.ts:{.u.pub[`spread;([]time:1#.z.N;spread:sp . d ix)]}
 \t 16
 ```
+
 As shown, we wrap this publication as part of a `.z.ts` function. This function is special because it can invoked automatically by setting a value for `\t`. In this case, we instruct kdb to publish the last seen spread from `d` every 16 ms. Why 16 ms? Because this allows the dashboard to update at a rate of ~60 frames per second, as illustrated in the [Streaming section](https://code.kx.com/dashboards/datasources/#streaming) from the KX Dashboard documentation.
 
 > 📚 We highly recommend reading [Building real-time tick subscribers](https://code.kx.com/q/wp/rt-tick/) by Nathan Perrem before building your own real-time components.
@@ -283,11 +304,11 @@ This approach allows us to identify and trade on significant deviations in the r
 
 ![]({{ site.baseurl }}/assets/2024/07/02/window_signals.gif)
 
-In this instance, we can see that the spread (purple line) is positive and above the signal (blue line), indicating that our Y index (GDAXI) is overvalued relative to the FCHI. Therefore, we should sell GDAXI and buy FCHI. At the end of the animation, it can be observed that the spread returns to 0 (green line), meaning the indexes are no longer overvalued or undervalued, respectively. At this point, we should unwind the positions we acquired earlier.
+In this instance, we can see that the spread (purple line) is positive and above the signal (blue line), indicating that our Y index (FCHI) is overvalued relative to the GDAXI. Therefore, we should sell FCHI and buy GDAXI. At the end of the animation, it can be observed that the spread returns to 0 (green line), meaning the indexes are no longer overvalued or undervalued, respectively. At this point, we should unwind the positions we acquired earlier.
 
-> 💡 Signal windows play a pivotal role in implementing Pairs Trading strategies. They serve as indicators for determining when to execute buy and sell actions, acting as arbitrary thresholds that guide our algorithm's decision-making process. These windows are derived from the variance of our data, representing a static variance assumption due to our consideration of a time-independent cointegrated series.
+> 💡 Signal windows play a pivotal role in implementing Pairs Trading strategies. They serve as indicators for determining when to execute buy and sell actions, acting as arbitrary thresholds that guide our algorithm's decision-making process. 
 
-As you can imagine, by taking advantage of the flexibility of the Tick architecture and the Kx Dashboard, what we have set up for two indexes could be implemented for all pairs of indexes that exhibit some cointegration without losing performance.
+The estimation of the parameters linked to the strategy, such as the windows or the standard deviations that trigger the buy or sell levels of the strategy, is usually carried out using historical data and performing Back Testing. The proposed architecture allows for these estimations using the historical database (similarly to how it was used for the cointegration test with pykx). Moreover, taking advantage of the flexibility of the Tick architecture and the Kx Dashboard, what we have set up for two indexes could be implemented for all pairs of indexes that exhibit some cointegration without losing performance.
 
 ## Conclusion
 
@@ -309,7 +330,7 @@ We hope you enjoyed reading this article! Please feel free to experiment with th
 
 ## Acknowledgements
 
-We wish to express our sincere gratitude to Álvaro Sánchez-Paniagua Ríos for initiating the development and research process of this post; we greatly appreciate the foundational work he established. Furthermore, we extend our deepest thanks to Javier Sabio for introducing us to the topic of pairs trading and generously providing the initial documentation that facilitated our further exploration and development of this subject matter. Finally, we are immensely grateful to Jesús López González for his invaluable assistance in integrating the pairs trading strategy within the tick architecture and for his thorough review of the post's content. His expertise and insights have significantly enhanced the quality and practicality of this work.
+We wish to express our sincere gratitude to Álvaro Sánchez-Paniagua Ríos for initiating the development and research process of this post; we greatly appreciate the foundational work he established. Furthermore, we extend our deepest thanks to Javier Sabio for introducing us to the topic of pairs trading and generously providing the initial documentation that facilitated our further exploration and development of this subject matter. Last, we appreciate the advise on financial matters from Augusto G. Boyano.
 
 ## References and Documentation
 
@@ -328,6 +349,7 @@ For the financial implementation, we used:
 * QuantResearch: [https://github.com/QuantConnect/Research/blob/master/Analysis/02%20Kalman%20Filter%20Based%20Pairs%20Trading.ipynb](https://github.com/QuantConnect/Research/blob/master/Analysis/02%20Kalman%20Filter%20Based%20Pairs%20Trading.ipynb)
 
 For the data gathering, we used:
+
 * Yahoo Finance API: [https://github.com/ranaroussi/yfinance](https://github.com/ranaroussi/yfinance)
 * Tickstory: [https://tickstory.com/](https://tickstory.com/)
 
