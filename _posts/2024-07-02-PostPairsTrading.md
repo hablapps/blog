@@ -263,7 +263,7 @@ Here, we assume that `ms` points to the MS component (similar to how `hdb` was u
 Real-time components can manifest their interest in a particular table and a subset of symbols. Naturally, we are only interested in getting quotes associated with one of the indexes in our `ix` pair:
 
 ```q
-tp"(.u.sub[`quote;",(.Q.s1 ix),"])"
+tp(".u.sub";`quote;ix)
 ```
 
 As usual, we assume that `tp` is a pointer to the TP process. Essentially, `.u.sub` registers the RPT handle in the TP so it can later notify the recently subscribed component about new events. It assumes that the subscriber has defined an `upd` function as a kind of callback:
