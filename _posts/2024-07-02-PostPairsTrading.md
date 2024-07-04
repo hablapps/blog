@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "Pairs Trading in KDB+ using Tick Architecture in 25 lines"
-author: Christian Aberturas López, Jesús López-González
-image: /img/dalle-puzzle.webp
+author: Christian Aberturas López, Jesús López-González, Oscar Nydza Nicpoñ
+image: /img/dalle-pairstrading.webp
 toc: true
 ---
 
