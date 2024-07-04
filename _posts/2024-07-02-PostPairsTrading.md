@@ -330,7 +330,7 @@ We hope you enjoyed reading this article! Please feel free to experiment with th
 
 ## Acknowledgements
 
-We wish to express our sincere gratitude to Álvaro Sánchez-Paniagua Ríos for initiating the development and research process of this post; we greatly appreciate the foundational work he established. Furthermore, we extend our deepest thanks to Javier Sabio for introducing us to the topic of pairs trading and generously providing the initial documentation that facilitated our further exploration and development of this subject matter. Lastly, we sincerely appreciate Augusto G. Boyano's dedication to refining, polishing and reviewing the terminology and explanations of financial concepts.
+We wish to express our sincere gratitude to Álvaro Sánchez-Paniagua Ríos for initiating the development and research process of this post; we greatly appreciate the foundational work he established. Furthermore, we extend our deepest thanks to Javier Sabio for introducing us to the topic of pairs trading and generously providing the initial documentation that facilitated our further exploration and development of this subject matter. Also, we sincerely appreciate Augusto G. Boyano's dedication to refining, polishing and reviewing the terminology and explanations of financial concepts. Finally, we would like to thank Juan Manuel Serrano for his invaluable feedback in the review process and his involvement in this endeavour.
 
 ## References and Documentation
 
